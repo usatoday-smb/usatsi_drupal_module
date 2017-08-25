@@ -1,0 +1,9 @@
+name = Media: UsatSi
+description = Adds USA Today Sports Images tab in media browser.
+package = Media
+core = 7.x
+
+dependencies[] = media
+dependencies[] = media_internet
+
+files[] = includes/MediaUsatSi.inc

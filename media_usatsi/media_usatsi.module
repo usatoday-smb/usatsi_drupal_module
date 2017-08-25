@@ -1,0 +1,361 @@
+<?php
+
+/**
+ * @file
+ * Provides definition for USA Today Sports Images media integration.
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function media_usatsi_menu() {
+
+  $items['admin/config/media/usatsi'] = array(
+    'title' => 'USAT SI Media',
+    'description' => 'Settings for media usatsi module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_usatsi_admin'),
+    'access arguments' => array('administer media browser'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'media_usatsi.admin.inc',
+  );
+
+  $items['file/add/usatsi'] = array(
+    'title' => 'USAT SI',
+    'description' => 'Add images from USA Today Sports Images to your media library.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_usatsi_external'),
+    'access arguments' => array('access media browser'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'file_entity.pages.inc',
+    'file path' => drupal_get_path('module', 'file_entity'),
+     'menu_name' => 'usatsi-menu-tab',
+     'options' => array(
+         'attributes' => array(
+             'class' => array('media-usatsi')
+         )
+     ),
+
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_usatsi_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_usatsi_list' => array(
+      'variables' => array(
+        'images' => NULL,
+      ),
+      'template' => 'media-usatsi-list',
+      'path' => drupal_get_path('module', 'media_usatsi') . '/templates',
+    ),
+  );
+}
+
+/**
+ * Implements hook_forms().
+ */
+function media_usatsi_forms($form_id, $args) {
+  $forms = array();
+
+  // Create a copy of the upload wizard form for internet media.
+  if ($form_id == 'media_usatsi_external') {
+    $forms[$form_id] = array(
+      'callback' => 'file_entity_add_upload',
+    );
+  }
+
+  return $forms;
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_usatsi_form_file_entity_edit_alter(&$form, &$form_state) {
+    // Make adjustments to the file edit form when used in a CTools modal.
+  if (!empty($form_state['ajax'])) {
+      // Remove the preview and the delete button.
+    $form['preview']['#access'] = FALSE;
+    $form['actions']['delete']['#access'] = FALSE;
+
+    // Convert the cancel link to a button which triggers a modal close.
+    $form['actions']['cancel']['#attributes']['class'][] = 'button';
+    $form['actions']['cancel']['#attributes']['class'][] = 'button-no';
+    $form['actions']['cancel']['#attributes']['class'][] = 'ctools-close-modal';
+
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $form_id) {
+
+  $step = $form['#step'];
+  $options = $form['#options'];
+
+  // Swap the upload field for an embed field when on the first step of the web
+  // tab.
+  if ($form_id == 'media_usatsi_external' && $step == 1) {
+    unset($form['upload']);
+
+    // Add JS & CSS.
+    drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi.js');
+    drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
+
+    $form['external_image'] = array(
+      '#type' => 'textfield',
+      '#reguired' => 1,
+      '#attributes' => array('placeholder' => t('Enter search term')),
+    );
+
+    $form['embed_code'] = array(
+      '#type' => 'hidden',
+      '#title' => t('File URL'),
+      '#description' => t('Enter a URL to a file.'),
+      '#maxlength' => 2083,
+      '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
+    );
+
+
+
+    $form['field_usatsi_headline_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 256,
+      '#default_value' => isset($form_state['storage']['field_usatsi_headline']) ? $form_state['storage']['field_usatsi_headline'] : NULL,
+    );
+
+    $form['field_usatsi_caption_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 2083,
+      '#default_value' => isset($form_state['storage']['field_usatsi_caption']) ? $form_state['storage']['field_usatsi_caption'] : NULL,
+    );
+
+    $form['field_usatsi_credit_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 256,
+      '#default_value' => isset($form_state['storage']['field_usatsi_credit']) ? $form_state['storage']['field_usatsi_credit'] : NULL,
+    );
+
+
+    $form['search'] = array(
+      '#type' => 'submit',
+      '#value' => t('Search'),
+      '#input' => TRUE,
+      '#name' => 'op',
+      '#button_type' => 'submit',
+      '#executes_submit_callback' => FALSE,
+      '#limit_validation_errors' => FALSE,
+      '#process' => array('ajax_process_form'),
+      '#theme_wrappers' => array('button'),
+      '#ajax' => array(
+        'callback' => 'media_usatsi_external_ajax_callback',
+        'wrapper' => 'usatsi-output',
+        'event' => 'click',
+      ),
+    );
+
+    // Blank output field which we will fill using AJAX.
+    $form['output'] = array(
+      '#prefix' => '<div id="usatsi-output">',
+      '#suffix' => '</div>',
+      '#markup' => '',
+    );
+
+
+    // Add validation and submission handlers to the form and ensure that they
+    // run first.
+    array_unshift($form['#validate'], 'media_usatsi_add_validate');
+    array_unshift($form['#submit'], 'media_internet_add_submit');
+
+  }
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_usatsi_form_alter(&$form, $form_state, $form_id) {
+
+  if ( isset( $_POST['field_usatsi_headline_hidden'])) {
+    //$form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_alt_text'];
+    //$form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_title_text'];
+    $form['field_usatsi_headline'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_headline_hidden'];
+    $form['field_usatsi_caption'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_caption_hidden'];
+    $form['field_usatsi_credit'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_credit_hidden'];
+  }
+
+}
+
+
+/**
+ * AJAX callback function for media_usatsi_external().
+ */
+function media_usatsi_external_ajax_callback($form, $form_state) {
+
+  // Search input.
+  $search_term = check_plain($form_state['values']['external_image']);
+
+  // Receive content.
+  $content = media_usatsi_search($search_term);
+
+  $output = theme('media_usatsi_list', array(
+    'images' => $content,
+  ));
+
+  // Return ajax.
+  return array(
+    '#type' => 'ajax',
+    '#commands' => array(
+      ajax_command_html('#usatsi-output', $output),
+      array(
+        'command' => 'afterAjaxScheduleAdded',
+      ),
+    ),
+  );
+
+
+}
+
+/**
+ * Main function for interaction with USA Today Sports Images API.
+ *
+ * @param string $search_term
+ *   String upon which we call usatsi api.
+ *
+ * @return string
+ *   Return HTML.
+ */
+function media_usatsi_search($search_term) {
+
+  // USAT SI API key.
+  $usatsi_api = variable_get('media_usatsi_api', "");
+  $usatsi_api_secret = variable_get('media_usatsi_api_secret', "");
+
+  if (empty($usatsi_api)) {
+    return t('Please insert API Key on module settings page');
+  }
+
+    if (empty($usatsi_api_secret)) {
+        return t('Please insert API Secret on module settings page');
+    }
+
+  $cid = 'media:usatsi:' . $search_term;
+
+  //If a cached entry exists, return it.
+  if ($cached = cache_get($cid)) {
+    $content = $cached->data;
+  } else {
+
+    //Oauth Params
+    $baseUrl = "http://www.usatodaysportsimages.com/api/searchAPI/";
+    $consumerSecret = $usatsi_api_secret;
+    $consumerKey = $usatsi_api;
+    $oauthTimestamp = time();
+    $nonce = md5(mt_rand());
+    $oauthSignatureMethod = "HMAC-SHA1";
+    $oauthVersion = "1.0";
+    $keywords = $search_term;
+    $terms = $search_term;
+
+    $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
+      . rawurlencode("keywords=" . rawurlencode($keywords)
+        . "&oauth_consumer_key=" . rawurlencode($consumerKey)
+        . "&oauth_nonce=" . rawurlencode($nonce)
+        . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+        . "&oauth_timestamp=" . $oauthTimestamp
+        . "&oauth_version=" . $oauthVersion
+        . "&terms=" . rawurlencode($terms));
+    $sigKey = $consumerSecret . "&";
+    $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, true));
+
+    $requestUrl = $baseUrl . "?oauth_consumer_key=" . rawurlencode($consumerKey)
+      . "&oauth_nonce=" . rawurlencode($nonce)
+      . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+      . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
+      . "&oauth_version=" . rawurlencode($oauthVersion)
+      . "&oauth_signature=" . rawurlencode($oauthSig)
+      . "&terms=" . rawurlencode($terms)
+      . "&keywords=" . rawurlencode($keywords);
+
+    $response = drupal_http_request($requestUrl);//file_get_contents($requestUrl);
+
+
+    if ($response->code == 200) {
+
+      $json_response = drupal_json_decode($response->data);
+      // Set default message if no images.
+      $content = t('No pictures for current search');
+
+      // Define result as array.
+      $images = array();
+
+      foreach ($json_response['results']['item'] as $row => $response_data) {
+        foreach ($response_data as $innerRow => $value) {
+
+          $thumb = $value['thumbUrl'];
+          $title = $value['headline'];
+          $id = $value['uniqueId"'];
+          $full = $value['previewUrl'];
+          $date_created = $value['dateCreate'];
+          $keywords = $value['keywords'][0];
+          $caption = $value['caption'];
+          $credit = $value['credit'];
+
+          // Get full image.
+          //$download_url = str_replace('_640', '_960', $full);
+
+          $download_url = $full;
+          $people_string = '';
+
+          foreach ($keywords as $row => $keyword) {
+            foreach ($keyword as $item => $people) {
+              if (array_key_exists('People', $people)) {
+                $people_string = $people['People'];
+              }
+            }
+            if (!empty($people_string)) {
+              break;
+            }
+          }
+
+          $images[] = array(
+            'download' => $download_url,
+            'thumb' => $thumb,
+            'title' => $title,
+            'date_created' => format_date(strtotime($date_created), 'custom', 'M j, Y'),
+            'people' => $people_string,
+            'caption' => $caption,
+            'credit' => $credit,
+
+          );
+        }
+      }
+      $content = $images;
+
+    }
+  }
+
+    return $content;
+
+}
+
+
+/**
+ * Allow stream wrappers to have their chance at validation.
+ *
+ * Any module that implements hook_media_parse will have an
+ * opportunity to validate this.
+ *
+ * @see media_parse_to_uri()
+ */
+function media_usatsi_add_validate($form, &$form_state) {}
+
+
+function media_usatsi_get_provider($embed_string) {}
