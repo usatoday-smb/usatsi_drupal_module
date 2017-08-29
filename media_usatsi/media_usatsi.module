@@ -4,6 +4,11 @@
  * @file
  * Provides definition for USA Today Sports Images media integration.
  */
+function media_usatsi_init() {
+  //print 'Holy Inits!!!!';
+  //drupal_add_js(array('media_usatsi' => array('ajaxUrl' => url('media_usatsi/ajax'))), 'setting' );
+  drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi_styles.css');
+}
 
 
 /**
@@ -39,7 +44,60 @@ function media_usatsi_menu() {
 
   );
 
+ /* $items['ajax/get/usatsi/image/%'] = array(
+    'title' => 'USAT SI Full Image',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(4),
+    'access arguments' => array('access media browser'),
+    'delivery callback' => 'media_usatsi_get_fullimage_ajax',
+    'type' => MENU_CALLBACK,
+  ); */
+
+ /*$items['file/add/usatsi/%'] = array(
+    'title' => 'USAT SI Full Image',
+    'page callback' => 'media_usatsi_register_ajax',
+    'page arguments' => array(3),
+    'access callback' => 'user_access',
+    'access arguments' => array('access media browser'),
+    'type' => MENU_CALLBACK,
+  );*/
+
+
+  $items['media_usatsi/ajax/%'] = array(
+    'page callback' => 'media_usatsi_ajax',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'delivery callback' => 'media_usatsi_ajax',
+  );
+
+
   return $items;
+}
+
+
+/**
+ * Callback to return JSON encoded image for given id.
+ */
+function media_usatsi_ajax($id) {
+  //drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
+  //$params['request_uri'] = 'http://localhost2:8888/' . $id;
+  header("Content-Type: image/jpeg");
+  //$params['request_uri'] = 'http://localhost2:8888/sites/default/files/10243428.jpg';
+ $response = drupal_http_request('http://localhost2:8888/' . $id);
+
+  //$response = proxy($params);
+  echo $response->data;
+
+
+    //array( 'method' => 'GET', 'headers' => array('content-type' => 'image/jpeg')));//file_get_contents('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
+  //echo $response->data;
+  //var_dump($response);
+  //echo $response->data;
+
+  //file_put_contents('7413318'.'.jpg',$response);
+  //return drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
+  //$return = drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
 }
 
 /**
@@ -105,8 +163,9 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
   if ($form_id == 'media_usatsi_external' && $step == 1) {
     unset($form['upload']);
 
-    // Add JS & CSS.
+    // Add JS
     drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi.js');
+    // Add CSS.
     drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
 
     $form['external_image'] = array(
@@ -168,6 +227,12 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#markup' => '',
     );
 
+
+    $form['#validators'] = array();
+
+    if (!empty($options['types'])) {
+      $form['#validators']['media_file_validate_types'] = array($options['types']);
+    }
 
     // Add validation and submission handlers to the form and ensure that they
     // run first.
@@ -301,8 +366,9 @@ function media_usatsi_search($search_term) {
 
           $thumb = $value['thumbUrl'];
           $title = $value['headline'];
-          $id = $value['uniqueId"'];
-          $full = $value['previewUrl'];
+          $id = $value['uniqueId'];
+          //$full = $value['previewUrl'];
+          $full = 'http://localhost:8888/media_usatsi/ajax/10235277_16.jpg';
           $date_created = $value['dateCreate'];
           $keywords = $value['keywords'][0];
           $caption = $value['caption'];
