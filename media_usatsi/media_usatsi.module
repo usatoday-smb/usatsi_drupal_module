@@ -6,7 +6,7 @@
  */
 function media_usatsi_init() {
   //print 'Holy Inits!!!!';
-  //drupal_add_js(array('media_usatsi' => array('ajaxUrl' => url('media_usatsi/ajax'))), 'setting' );
+  drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi_main.js');
   drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi_styles.css');
 }
 
@@ -44,25 +44,6 @@ function media_usatsi_menu() {
 
   );
 
- /* $items['ajax/get/usatsi/image/%'] = array(
-    'title' => 'USAT SI Full Image',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array(4),
-    'access arguments' => array('access media browser'),
-    'delivery callback' => 'media_usatsi_get_fullimage_ajax',
-    'type' => MENU_CALLBACK,
-  ); */
-
- /*$items['file/add/usatsi/%'] = array(
-    'title' => 'USAT SI Full Image',
-    'page callback' => 'media_usatsi_register_ajax',
-    'page arguments' => array(3),
-    'access callback' => 'user_access',
-    'access arguments' => array('access media browser'),
-    'type' => MENU_CALLBACK,
-  );*/
-
-
   $items['media_usatsi/ajax/%'] = array(
     'page callback' => 'media_usatsi_ajax',
     'page arguments' => array(2),
@@ -80,24 +61,41 @@ function media_usatsi_menu() {
  * Callback to return JSON encoded image for given id.
  */
 function media_usatsi_ajax($id) {
-  //drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
-  //$params['request_uri'] = 'http://localhost2:8888/' . $id;
+  // USAT SI API key.
+  $usatsi_api = variable_get('media_usatsi_api', "");
+  $usatsi_api_secret = variable_get('media_usatsi_api_secret', "");
+
+  //Oauth Params
+  $baseUrl = "http://www.usatsimg.com/api/download/";
+  $consumerSecret = $usatsi_api_secret;
+  $consumerKey = $usatsi_api;
+  $oauthTimestamp = time();
+  $nonce = md5(mt_rand());
+  $oauthSignatureMethod = "HMAC-SHA1";
+  $oauthVersion = "1.0";
+  $imageid = explode('.',$id)[0];
+
+  $sigBase = "GET&" . rawurlencode($baseUrl)."&"
+    . rawurlencode("imageID=" . rawurlencode($imageid)
+      . "&oauth_consumer_key=" . rawurlencode($consumerKey)
+      . "&oauth_nonce=" . rawurlencode($nonce)
+      . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+      . "&oauth_timestamp=" .rawurlencode($oauthTimestamp)
+      . "&oauth_version=" . rawurlencode($oauthVersion));
+  $sigKey = $consumerSecret . "&";
+  $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, true));
+
+  $requestUrl = $baseUrl . "?oauth_consumer_key=" . rawurlencode($consumerKey)
+    . "&oauth_nonce=" . rawurlencode($nonce)
+    . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+    . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
+    . "&oauth_version=" . rawurlencode($oauthVersion)
+    . "&oauth_signature=" . rawurlencode($oauthSig)
+    . "&imageID=" . rawurlencode($imageid);
+
+  $response = drupal_http_request($requestUrl);
   header("Content-Type: image/jpeg");
-  //$params['request_uri'] = 'http://localhost2:8888/sites/default/files/10243428.jpg';
- $response = drupal_http_request('http://localhost2:8888/' . $id);
-
-  //$response = proxy($params);
   echo $response->data;
-
-
-    //array( 'method' => 'GET', 'headers' => array('content-type' => 'image/jpeg')));//file_get_contents('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
-  //echo $response->data;
-  //var_dump($response);
-  //echo $response->data;
-
-  //file_put_contents('7413318'.'.jpg',$response);
-  //return drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
-  //$return = drupal_http_request('http://thumb.usatodaysportsimages.com/image/thumb/650-650nw/7413318.jpg');
 }
 
 /**
@@ -368,7 +366,7 @@ function media_usatsi_search($search_term) {
           $title = $value['headline'];
           $id = $value['uniqueId'];
           //$full = $value['previewUrl'];
-          $full = 'http://localhost:8888/media_usatsi/ajax/10235277_16.jpg';
+          $full = $GLOBALS['base_url'] . '/media_usatsi/ajax/' . $id . '.jpg';
           $date_created = $value['dateCreate'];
           $keywords = $value['keywords'][0];
           $caption = $value['caption'];
