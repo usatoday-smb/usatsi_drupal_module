@@ -5,7 +5,6 @@
  * Provides definition for USA Today Sports Images media integration.
  */
 function media_usatsi_init() {
-  //print 'Holy Inits!!!!';
   drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi_main.js');
   drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi_styles.css');
 }
@@ -419,7 +418,57 @@ function media_usatsi_search($search_term) {
  *
  * @see media_parse_to_uri()
  */
-function media_usatsi_add_validate($form, &$form_state) {}
+function media_usatsi_add_validate($form, &$form_state) {
 
+  $embed_code = $form_state['values']['embed_code'];
 
-function media_usatsi_get_provider($embed_string) {}
+  // See @file_entity_add_upload_submit
+  // Needed for skipping fields if is enabled and if Web tab is active.
+  $form_state['triggering_element']['#id'] = 'edit-next';
+
+  if (!empty($embed_code)) {
+    try {
+      $provider = media_internet_get_provider($embed_code);
+      $provider->validate();
+    }
+    catch (MediaInternetNoHandlerException $e) {
+      form_set_error('embed_code', $e->getMessage());
+      return;
+    }
+    catch (MediaInternetValidationException $e) {
+      form_set_error('embed_code', $e->getMessage());
+      return;
+    }
+
+    $validators = $form['#validators'];
+    $file = $provider->getFileObject();
+
+    if ($validators) {
+      try {
+        $file = $provider->getFileObject();
+      }
+      catch (Exception $e) {
+        form_set_error('embed_code', $e->getMessage());
+        return;
+      }
+
+      $errors = file_validate($file, $validators);
+
+      if (!empty($errors)) {
+        $message = t('%url could not be added.', array('%url' => $embed_code));
+        if (count($errors) > 1) {
+          $message .= theme('item_list', array('items' => $errors));
+        }
+        else {
+          $message .= ' ' . array_pop($errors);
+        }
+        form_set_error('embed_code', $message);
+        return FALSE;
+      }
+    }
+  }
+
+  else {
+    return FALSE;
+  }
+}

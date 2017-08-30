@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of MediaUsatSi.
+ * Definition of MediaUsatsi.
  */
 
 /**
@@ -30,8 +30,6 @@ class MediaUsatsi extends MediaBrowserPlugin {
     $params = $this->params;
     $params['usatsi'] = TRUE;
     $build['form'] = drupal_get_form('media_usatsi_external', $params);
-
-    field_create_field('testing field creation');
 
     return $build;
   }
