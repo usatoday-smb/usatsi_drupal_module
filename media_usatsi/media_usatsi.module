@@ -5,6 +5,7 @@
  * Provides definition for USA Today Sports Images media integration.
  */
 function media_usatsi_init() {
+  drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/jquery.simplePagination.js');
   drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi_main.js');
   drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi_styles.css');
 }
@@ -50,6 +51,15 @@ function media_usatsi_menu() {
     'access arguments' => array('access content'),
     'delivery callback' => 'media_usatsi_ajax',
   );
+
+  /* $items['media_usatsi/ajax/search/%/page/%'] = array(
+    'page callback' => 'media_usatsi_ajax',
+    'page arguments' => array('all'),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'delivery callback' => 'media_usatsi_ajax',
+  ); */
+
 
 
   return $items;
@@ -199,6 +209,10 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#default_value' => isset($form_state['storage']['field_usatsi_credit']) ? $form_state['storage']['field_usatsi_credit'] : NULL,
     );
 
+    $form['field_usatsi_pagenum_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 256,
+    );
 
     $form['search'] = array(
       '#type' => 'submit',
@@ -264,8 +278,14 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
   // Search input.
   $search_term = check_plain($form_state['values']['external_image']);
 
+  $page_num = 1;
+
+  if (!empty($form_state['values']['field_usatsi_pagenum_hidden'])) {
+      $page_num = $form_state['values']['field_usatsi_pagenum_hidden'];
+  }
+
   // Receive content.
-  $content = media_usatsi_search($search_term);
+  $content = media_usatsi_search($search_term, $page_num);
 
   $output = theme('media_usatsi_list', array(
     'images' => $content,
@@ -279,6 +299,11 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
       array(
         'command' => 'afterAjaxScheduleAdded',
       ),
+      array(
+        'command' => 'media_usatsi_pagination',
+        'pageNumber' => $page_num,
+        //'paginationUrl' => $GLOBALS['base_url'] . '/file/add/usatsi?pagenum='
+      ),
     ),
   );
 
@@ -289,12 +314,13 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
  * Main function for interaction with USA Today Sports Images API.
  *
  * @param string $search_term
+ * @param string $page_num
  *   String upon which we call usatsi api.
  *
  * @return string
  *   Return HTML.
  */
-function media_usatsi_search($search_term) {
+function media_usatsi_search($search_term, $page_num = 1) {
 
   // USAT SI API key.
   $usatsi_api = variable_get('media_usatsi_api', "");
@@ -308,10 +334,10 @@ function media_usatsi_search($search_term) {
         return t('Please insert API Secret on module settings page');
     }
 
-  $cid = 'media:usatsi:' . $search_term;
+  $cid = 'media:usatsi:' . $search_term . ':' . $page_num;
 
   //If a cached entry exists, return it.
-  if ($cached = cache_get($cid)) {
+  if ($cached = cache_get('sdfsdfsdfsdfsdf')) {
     $content = $cached->data;
   } else {
 
@@ -328,12 +354,15 @@ function media_usatsi_search($search_term) {
 
     $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
       . rawurlencode("keywords=" . rawurlencode($keywords)
+        . "&limit=100"
         . "&oauth_consumer_key=" . rawurlencode($consumerKey)
         . "&oauth_nonce=" . rawurlencode($nonce)
         . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
         . "&oauth_timestamp=" . $oauthTimestamp
         . "&oauth_version=" . $oauthVersion
+        . "&offset=" . $page_num
         . "&terms=" . rawurlencode($terms));
+
     $sigKey = $consumerSecret . "&";
     $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, true));
 
@@ -344,7 +373,12 @@ function media_usatsi_search($search_term) {
       . "&oauth_version=" . rawurlencode($oauthVersion)
       . "&oauth_signature=" . rawurlencode($oauthSig)
       . "&terms=" . rawurlencode($terms)
-      . "&keywords=" . rawurlencode($keywords);
+      . "&keywords=" . rawurlencode($keywords)
+      . "&limit=100"
+      . "&offset=" . $page_num;
+
+    //print $requestUrl;
+
 
     $response = drupal_http_request($requestUrl);//file_get_contents($requestUrl);
 

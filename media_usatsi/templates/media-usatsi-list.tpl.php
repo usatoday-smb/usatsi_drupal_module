@@ -10,6 +10,8 @@
  */
 ?>
 
+
+<div  class="media-usatsi-pagination"></div>
 <div class="media-list-thumbnails">
   <?php if (is_array($images)): ?>
     <?php foreach ($images as $key => $img): ?>
