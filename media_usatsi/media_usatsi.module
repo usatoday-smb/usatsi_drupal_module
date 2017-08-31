@@ -381,8 +381,6 @@ function media_usatsi_search($search_term, $page_num = 1) {
       . "&limit=100"
       . "&offset=" . $page_num;
 
-    //print $requestUrl;
-
 
     $response = drupal_http_request($requestUrl);//file_get_contents($requestUrl);
 
@@ -408,6 +406,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $keywords = $value['keywords'][0];
           $caption = $value['caption'];
           $credit = $value['credit'];
+          $previewUrl = $value['previewUrl'];
 
           $download_url = $full;
           $people_string = '';
@@ -431,6 +430,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
             'people' => $people_string,
             'caption' => $caption,
             'credit' => $credit,
+            'previewUrl' => $previewUrl,
 
           );
         }

@@ -290,3 +290,47 @@ form#media-usatsi-external input#edit-search {
 #media-usatsi-external .light-theme .current {
     box-shadow: none;
 }
+
+#media-usatsi-external .ajax-progress-throbber .throbber {
+    background: transparent url('../si-loader-75x75.gif') no-repeat;
+    background-size: 100%;
+
+}
+
+#media-usatsi-external .on-hover-content {
+    position: absolute;
+    top: 0;
+    background-color: #000;
+    padding: 10px;
+    border-radius: 10px;
+    width: 430px;
+    /* transition-delay: 3s;
+    transition: all .5s; */
+    text-align: center;
+    display: none;
+    z-index: 999999;
+}
+
+#media-usatsi-external .on-hover-content img {
+    width: 100%;
+    margin: 0 auto;
+    display: inline-block;
+}
+
+#media-usatsi-external .on-hover-content {
+    text-align: left;
+}
+
+#media-usatsi-external .on-hover-content .label-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#media-usatsi-external .on-hover-content .label-caption {
+     color: #f2f2f2;
+}
+
+#media-usatsi-external .on-hover-content .label-credot {
+    font-size: 90%;
+    color: #ccc;
+}
