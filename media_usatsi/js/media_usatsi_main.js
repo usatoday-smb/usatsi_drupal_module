@@ -7,38 +7,37 @@
         }
     };
 
-    Drupal.ajax.prototype.commands.media_usatsi_pagination = function(ajax, response, status) {
+    if ( Drupal.hasOwnProperty('ajax') ) {
+        Drupal.ajax.prototype.commands.media_usatsi_pagination = function(ajax, response, status) {
 
-        $('.media-usatsi-pagination').once().pagination({
-            items: 100,
-            itemsOnPage: 100,
-            currentPage: response.pageNumber,
-            //cssStyle: 'light-theme',
-            //hrefTextPrefix: response.paginationUrl,
-            onPageClick: function(pagenum, evt) {
-                evt.preventDefault();
-                //console.log(pagenum);
-                $('#media-usatsi-external input[name="field_usatsi_pagenum_hidden"]').val(pagenum);
+            $('.media-usatsi-pagination').once().pagination({
+                items: response.totalImages,
+                itemsOnPage: 100,
+                currentPage: response.pageNumber,
+                cssStyle: 'dark-theme',
+                //hrefTextPrefix: response.paginationUrl,
+                onPageClick: function(pagenum, evt) {
+                    evt.preventDefault();
+                    $('#media-usatsi-external input[name="field_usatsi_pagenum_hidden"]').val(pagenum);
+                    //Triggers click event on search button
+                    $('#edit-search').trigger('click');
+                }
+            });
 
-                $('#edit-search').trigger('click');
-                //$('#media-usatsi-external').submit();
-                //console.log(pagenum);
+            $('.media-usatsi-pagination-btm').once().pagination({
+                items: response.totalImages,
+                itemsOnPage: 100,
+                currentPage: response.pageNumber,
+                cssStyle: 'dark-theme',
+                //hrefTextPrefix: response.paginationUrl,
+                onPageClick: function(pagenum, evt) {
+                    evt.preventDefault();
+                    $('#media-usatsi-external input[name="field_usatsi_pagenum_hidden"]').val(pagenum);
+                    //Triggers click event on search button
+                    $('#edit-search').trigger('click');
+                }
+            });
 
-
-                //'paginationUrl'
-                //$('#media-usatsi-external').attr('action', response.paginationUrl);
-
-                ///$('#media-usatsi-external input[name="field_usatsi_pagenum_hidden"]').val(response.pageNumber);
-
-                //$('#media-usatsi-external').submit();
-
-
-                //console.log('pageclicked');
-            }
-        });
-
+        }
     }
-
-
-
 }(jQuery));

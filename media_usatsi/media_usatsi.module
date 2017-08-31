@@ -291,6 +291,9 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
     'images' => $content,
   ));
 
+  //print json_encode($content->totalImages);
+  //$totalImages = $content->totalImages;
+
   // Return ajax.
   return array(
     '#type' => 'ajax',
@@ -302,6 +305,7 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
       array(
         'command' => 'media_usatsi_pagination',
         'pageNumber' => $page_num,
+        'totalImages' => $content['totalImages'],
         //'paginationUrl' => $GLOBALS['base_url'] . '/file/add/usatsi?pagenum='
       ),
     ),
@@ -405,9 +409,6 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $caption = $value['caption'];
           $credit = $value['credit'];
 
-          // Get full image.
-          //$download_url = str_replace('_640', '_960', $full);
-
           $download_url = $full;
           $people_string = '';
 
@@ -435,6 +436,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
         }
       }
       $content = $images;
+      $content['totalImages'] = $json_response['results']['totalAvailableImages'];
 
     }
   }
