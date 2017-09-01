@@ -304,8 +304,6 @@ form#media-usatsi-external input#edit-search {
     padding: 10px;
     border-radius: 10px;
     width: 430px;
-    /* transition-delay: 3s;
-    transition: all .5s; */
     text-align: center;
     display: none;
     z-index: 999999;
@@ -319,6 +317,9 @@ form#media-usatsi-external input#edit-search {
 
 #media-usatsi-external .on-hover-content {
     text-align: left;
+    top: -25%;
+    left: -25%;
+    overflow: hidden;
 }
 
 #media-usatsi-external .on-hover-content .label-title {
@@ -330,7 +331,6 @@ form#media-usatsi-external input#edit-search {
      color: #f2f2f2;
 }
 
-#media-usatsi-external .on-hover-content .label-credot {
-    font-size: 90%;
-    color: #ccc;
+#media-usatsi-external .on-hover-content .label-credit {
+    color: #666;
 }

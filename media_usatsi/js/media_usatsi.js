@@ -5,23 +5,30 @@
   Drupal.behaviors.media_usatsi = {
     attach: function (context, settings) {
 
+       var usatsi_media_preview_timeout = '';
+       var usatsi_media_current_preview_el = '';
 
-        $('body').delegate( "li  img", "mouseenter", function(e) {
+       $('body').delegate( "li  img", "mouseenter", function(e) {
+
             e.stopPropagation();
-            $(this).parent().css('top','-25%').css('left', '-25%');
-            $(this).closest('li').find('div.on-hover-content').fadeIn();
+            var el = $(this);
+            clearTimeout(usatsi_media_preview_timeout);
+
+            usatsi_media_preview_timeout = setTimeout(function() {
+                usatsi_media_current_preview_el = $(el).closest('li').find('div.on-hover-content');
+                $(usatsi_media_current_preview_el).fadeIn('fast').focus();
+            }, 2000);
         });
 
-       // $('body').delegate( "p", "mouseleave", function(e) {
-           // e.stopPropagation();
-           // $(this).closest('li').find('div.on-hover-content').fadeOut();
-       // });
+        $('body').delegate( "li  img", "mouseleave", function(e) {
+            clearTimeout(usatsi_media_preview_timeout);
+        });
 
 
         $('body').delegate('#media-usatsi-external .on-hover-content', 'mouseleave', function(e) {
             e.stopPropagation();
-            //$(this).clearQueue();
-            $(this).fadeOut();
+            clearTimeout(usatsi_media_preview_timeout);
+            $(this).hide();
         });
 
       //Add Class to Tab.
@@ -49,16 +56,6 @@
         // Autosubmit form.
         $('#media-usatsi-external').submit();
       });
-
-
-
-            /*console('gekki');
-            //$(this).next("div.on-hover-content").fadeToggle( "slow", "linear" );
-        })
-            .bind('mouseleave',function(){
-
-                // $(this).next("div.on-hover-content").fadeToggle( "slow", "linear" );
-            }); */
     }
   };
 }(jQuery));

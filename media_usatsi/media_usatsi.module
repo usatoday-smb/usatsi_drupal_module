@@ -10,7 +10,6 @@ function media_usatsi_init() {
   drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi_styles.css');
 }
 
-
 /**
  * Implements hook_menu().
  */
@@ -51,15 +50,6 @@ function media_usatsi_menu() {
     'access arguments' => array('access content'),
     'delivery callback' => 'media_usatsi_ajax',
   );
-
-  /* $items['media_usatsi/ajax/search/%/page/%'] = array(
-    'page callback' => 'media_usatsi_ajax',
-    'page arguments' => array('all'),
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('access content'),
-    'delivery callback' => 'media_usatsi_ajax',
-  ); */
-
 
 
   return $items;
@@ -171,6 +161,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
     unset($form['upload']);
 
     // Add JS
+    drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/jquery.hoverIntent.js');
     drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi.js');
     // Add CSS.
     drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
@@ -290,9 +281,6 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
   $output = theme('media_usatsi_list', array(
     'images' => $content,
   ));
-
-  //print json_encode($content->totalImages);
-  //$totalImages = $content->totalImages;
 
   // Return ajax.
   return array(
