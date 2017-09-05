@@ -6,7 +6,7 @@ body.page-file-add-usatsi #page {
 
 
 #media-usatsi-tab {
-    background: #a6a7a2 url(../si-logo-2x-black.png) no-repeat center;
+    background: #a6a7a2 url(../images/si-logo-2x-black.png) no-repeat center;
     background-position-y: 2px;
     background-size: 65%;
     overflow: hidden;
@@ -16,10 +16,15 @@ body.page-file-add-usatsi #page {
     border-color: #c9cac4;
 }
 
+.ui-state-active #media-usatsi-tab,
 #media-usatsi-tab.active,
 #media-usatsi-tab:hover {
-    background-image: url(../si-logo-2x.png);
+    background-image: url(../images/si-logo-2x.png);
     background-color: #0c0c0c;
+}
+
+#media-tab-usatsi {
+    background: #000;
 }
 
 
@@ -292,7 +297,7 @@ form#media-usatsi-external input#edit-search {
 }
 
 #media-usatsi-external .ajax-progress-throbber .throbber {
-    background: transparent url('../si-loader-75x75.gif') no-repeat;
+    background: transparent url('../images/si-loader-75x75.gif') no-repeat;
     background-size: 100%;
 
 }

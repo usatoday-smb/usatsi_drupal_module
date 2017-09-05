@@ -24,6 +24,10 @@ form#media-usatsi-external input#edit-search {
   height: auto;
 }
 
+#usatsi-output .media-item img {
+  display: inline-block;
+}
+
 #usatsi-output .media-list-thumbnails li {
   height: 365px;
   padding: 10px;
@@ -49,6 +53,12 @@ form#media-usatsi-external input#edit-search {
   border: none;
   background: #000;
   padding: 10px;
+  color: #FFF;
+}
+
+#usatsi-output .media-item .label-wrapper {
+  background: none;
+  position: inherit;
 }
 
 

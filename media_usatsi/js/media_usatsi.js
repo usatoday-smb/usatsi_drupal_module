@@ -5,6 +5,11 @@
   Drupal.behaviors.media_usatsi = {
     attach: function (context, settings) {
 
+
+        //Add Class to Tab.
+        $('.tabs.primary a[data-tabid="usatsi"]').attr('id', 'media-usatsi-tab');
+
+
        var usatsi_media_preview_timeout = '';
        var usatsi_media_current_preview_el = '';
 
