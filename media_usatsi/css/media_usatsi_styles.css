@@ -339,3 +339,7 @@ form#media-usatsi-external input#edit-search {
 #media-usatsi-external .on-hover-content .label-credit {
     color: #666;
 }
+
+img.usatsi {
+    cursor: pointer;
+}

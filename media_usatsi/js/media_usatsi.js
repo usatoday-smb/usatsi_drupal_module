@@ -54,9 +54,9 @@
            * post page to prepopulate image metadata fields
           */
           $('input[name="embed_code"]').val(usatsi_url);
-          $('input[name="field_usatsi_headline_hidden"]').val(usatsi_headline);
-          $('input[name="field_usatsi_caption_hidden"]').val(usatsi_caption);
-          $('input[name="field_usatsi_credit_hidden"]').val(usatsi_credit);
+          $('input[name="field_file_image_title_text_hidden"]').val(usatsi_headline);
+          $('input[name="field_file_image_alt_text_hidden"]').val(usatsi_caption);
+          $('input[name="field_file_image_attribution_hidden"]').val(usatsi_credit);
 
         // Autosubmit form.
         $('#media-usatsi-external').submit();

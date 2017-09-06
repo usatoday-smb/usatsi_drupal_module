@@ -161,7 +161,6 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
     unset($form['upload']);
 
     // Add JS
-    drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/jquery.hoverIntent.js');
     drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi.js');
     // Add CSS.
     drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
@@ -182,22 +181,22 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
 
 
 
-    $form['field_usatsi_headline_hidden'] = array(
+    $form['field_file_image_title_text_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
-      '#default_value' => isset($form_state['storage']['field_usatsi_headline']) ? $form_state['storage']['field_usatsi_headline'] : NULL,
+      '#default_value' => isset($form_state['storage']['field']) ? $form_state['storage']['field_file_image_title_text'] : NULL,
     );
 
-    $form['field_usatsi_caption_hidden'] = array(
+    $form['field_file_image_alt_text_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 2083,
-      '#default_value' => isset($form_state['storage']['field_usatsi_caption']) ? $form_state['storage']['field_usatsi_caption'] : NULL,
+      '#default_value' => isset($form_state['storage']['field_file_image_alt_text']) ? $form_state['storage']['field_file_image_alt_text'] : NULL,
     );
 
-    $form['field_usatsi_credit_hidden'] = array(
+    $form['field_file_image_attribution_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
-      '#default_value' => isset($form_state['storage']['field_usatsi_credit']) ? $form_state['storage']['field_usatsi_credit'] : NULL,
+      '#default_value' => isset($form_state['storage']['field_file_image_attribution']) ? $form_state['storage']['field_file_image_attribution'] : NULL,
     );
 
     $form['field_usatsi_pagenum_hidden'] = array(
@@ -249,15 +248,9 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
  * Implements hook_form_FORM_ID_alter().
  */
 function media_usatsi_form_alter(&$form, $form_state, $form_id) {
-
-  if ( isset( $_POST['field_usatsi_headline_hidden'])) {
-    //$form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_alt_text'];
-    //$form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_title_text'];
-    $form['field_usatsi_headline'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_headline_hidden'];
-    $form['field_usatsi_caption'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_caption_hidden'];
-    $form['field_usatsi_credit'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_usatsi_credit_hidden'];
-  }
-
+    $form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_alt_text_hidden'];
+    $form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_title_text_hidden'];
+    $form['field_file_image_attribution'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_attribution_hidden'];
 }
 
 
@@ -395,6 +388,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $caption = $value['caption'];
           $credit = $value['credit'];
           $previewUrl = $value['previewUrl'];
+          $historical = (!empty( $value['historical'] ) ? $value['historical'] : 0);
 
           $download_url = $full;
           $people_string = '';
@@ -419,6 +413,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
             'caption' => $caption,
             'credit' => $credit,
             'previewUrl' => $previewUrl,
+            'historical' => $historical,
 
           );
         }

@@ -19,14 +19,18 @@
             <li>
                 <div class="media-item">
                   <div class="media-thumbnail">
-                    <img class="usatsi"
-                         data-image="<?php print $img['download']; ?>"
-                         src="<?php print $img['thumb']; ?>"
-                         data-headline="<?php print $img['title']; ?>"
-                         data-caption="<?php print $img['caption']; ?>"
-                         data-credit="<?php print $img['credit']; ?>" />
+                    <?php if ( $img['historical'] == '1') : ?>
+                        <img src="<?php print $img['thumb']; ?>" />
+                    <?php else: ?>
+                        <img class="usatsi"
+                             data-image="<?php print $img['download']; ?>"
+                             src="<?php print $img['thumb']; ?>"
+                             data-headline="<?php print $img['title']; ?>"
+                             data-caption="<?php print $img['caption']; ?>"
+                             data-credit="<?php print $img['credit']; ?>" />
+                    <?php endif ?>
                     <div class="label-wrapper">
-                      <?php print $img['title']; ?>
+                      <?php print truncate_utf8($img['title'], 30, true, true); ?>
                     </div>
                     <div class="label-wrapper">
                       <?php print $img['people'] ?>

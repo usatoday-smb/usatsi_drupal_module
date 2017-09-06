@@ -59,6 +59,7 @@ form#media-usatsi-external input#edit-search {
 #usatsi-output .media-item .label-wrapper {
   background: none;
   position: inherit;
+  color: #CCC;
 }
 
 
