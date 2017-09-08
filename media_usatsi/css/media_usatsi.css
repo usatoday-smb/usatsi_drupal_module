@@ -3,22 +3,55 @@ form#media-usatsi-external input#edit-search {
   display: inline-block;
 }
 
-#usatsi-output .media-list-thumbnails li {
+#usatsi-output li.media-item-wrappper {
   float: none;
   display: inline-block;
 }
 
-#usatsi-output li .label-wrapper a {
+#usatsi-output li.media-item-wrappper .label-wrapper a {
   padding: 15px 0;
 }
 
-#usatsi-output ul li .media-thumbnail {
+#usatsi-output ul li.media-item-wrappper .media-thumbnail {
   position: relative;
   cursor: pointer;
   background: #000;
 }
 
-#usatsi-output ul li .media-thumbnail img {
+
+#usatsi-output ul li.media-item-wrappper .media-thumbnail-wrapper {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+}
+
+#usatsi-output ul.media-actions {
+  margin: 0;
+  padding: 0;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #FFF;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  line-height: normal;
+}
+
+
+#usatsi-output .media-actions li {
+  display: inline-block;
+  margin: 5px;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  padding: 5px;
+  opacity: .7;
+  border-radius: 5px;
+}
+
+#usatsi-output ul li.media-item-wrappper.media-thumbnail img {
   vertical-align: bottom;
   width: 100%;
   height: auto;
@@ -28,7 +61,7 @@ form#media-usatsi-external input#edit-search {
   display: inline-block;
 }
 
-#usatsi-output .media-list-thumbnails li {
+#usatsi-output li.media-item-wrappper {
   height: 365px;
   padding: 10px;
   display: inline-block;
@@ -62,6 +95,33 @@ form#media-usatsi-external input#edit-search {
   color: #CCC;
 }
 
+#usatsi-output li.media-icon-preview,
+#usatsi-output li.media-icon-import {
+  width: 20px;
+  height: 20px;
+  color: #FFF;
+  background-size: 70%;
+  background-color: #000;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#usatsi-output li.media-icon-preview {
+  background-image: url(../images/eye.png);
+}
+
+#usatsi-output li.media-icon-preview:hover {
+  background-image: url(../images/eye-hover.png);
+}
+
+#usatsi-output li.media-icon-import {
+  background-image: url(../images/upload.png);
+  right: 46px;
+}
+
+#usatsi-output li.media-icon-import:hover {
+  background-image: url(../images/upload-hover.png);
+}
 
 ul.primary li.active a, ul.primary li.active a.active, ul.primary li.active a:active, ul.primary li.active a:visited {
   background-color: #000;

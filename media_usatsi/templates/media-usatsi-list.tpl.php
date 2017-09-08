@@ -12,13 +12,14 @@
 
 
 <div class="media-usatsi-pagination"></div>
-<div class="media-list-thumbnails">
+<ul class="media-list-thumbnails">
   <?php if (is_array($images)): ?>
     <?php foreach ($images as $key => $img): ?>
         <?php if (!empty($img['thumb'])):  ?>
-            <li>
+            <li class="media-item-wrappper">
                 <div class="media-item">
                   <div class="media-thumbnail">
+                    <div class="media-thumbnail-wrapper">
                     <?php if ( $img['historical'] == '1') : ?>
                         <img src="<?php print $img['thumb']; ?>" />
                     <?php else: ?>
@@ -29,7 +30,12 @@
                              data-caption="<?php print $img['caption']; ?>"
                              data-credit="<?php print $img['credit']; ?>" />
                     <?php endif ?>
-                    <div class="label-wrapper">
+                    <ul class="media-actions">
+                        <li class="media-icon-preview" title="Image Preview"></li>
+                        <li class="media-icon-import" title="Import File"></li>
+                    </ul>
+                    </div>
+                      <div class="label-wrapper">
                       <?php print truncate_utf8($img['title'], 30, true, true); ?>
                     </div>
                     <div class="label-wrapper">
@@ -58,5 +64,5 @@
   <?php else: ?>
     <?php print $images; ?>
   <?php endif; ?>
-</div>
+</ul>
 <div class="media-usatsi-pagination-btm"></div>

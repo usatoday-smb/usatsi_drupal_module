@@ -5,42 +5,36 @@
   Drupal.behaviors.media_usatsi = {
     attach: function (context, settings) {
 
+      //Add Class to Tab.
+      $('.tabs.primary a[data-tabid="usatsi"]').attr('id', 'media-usatsi-tab');
 
-        //Add Class to Tab.
-        $('.tabs.primary a[data-tabid="usatsi"]').attr('id', 'media-usatsi-tab');
-
-
-       var usatsi_media_preview_timeout = '';
-       var usatsi_media_current_preview_el = '';
-
-       $('body').delegate( "li  img", "mouseenter", function(e) {
-
-            e.stopPropagation();
-            var el = $(this);
-            clearTimeout(usatsi_media_preview_timeout);
-
-            usatsi_media_preview_timeout = setTimeout(function() {
-                usatsi_media_current_preview_el = $(el).closest('li').find('div.on-hover-content');
-                $(usatsi_media_current_preview_el).fadeIn('fast').focus();
-            }, 2000);
-        });
-
-        $('body').delegate( "li  img", "mouseleave", function(e) {
-            clearTimeout(usatsi_media_preview_timeout);
-        });
-
-
-        $('body').delegate('#media-usatsi-external .on-hover-content', 'mouseleave', function(e) {
-            e.stopPropagation();
-            clearTimeout(usatsi_media_preview_timeout);
-            $(this).hide();
-        });
 
       //Add Class to Tab.
       $('.tabs.primary a[href="/file/add/usatsi"]').attr('id','media-usatsi-tab');
 
       // Hide submit button.
       $('form#media-usatsi-external .form-actions .form-submit').hide();
+
+      // Media button actions and preview bindings
+      $('img.usatsi').once().bind('mouseenter', function() {
+          $(this).next('.media-actions').fadeIn('fast');
+      });
+
+      $('.media-actions').once().bind('mouseleave', function() {
+        $(this).fadeOut('fast');
+      });
+
+      $('.media-actions li.media-icon-import').once().bind('click', function() {
+          $(this).parent().parent().find('.usatsi').trigger('click');
+      });
+
+      $('.media-actions li.media-icon-preview').once().bind('click', function() {
+          $(this).parent().closest('.media-item-wrappper').find('.on-hover-content').fadeIn('fast');
+      });
+
+      $('.on-hover-content').once().bind('mouseleave', function() {
+        $(this).fadeOut('fast');
+      });
 
       $('img.usatsi').bind('click', function (e) {
 
