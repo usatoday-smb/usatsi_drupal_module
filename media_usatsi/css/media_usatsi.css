@@ -123,6 +123,46 @@ form#media-usatsi-external input#edit-search {
   background-image: url(../images/upload-hover.png);
 }
 
+#usatsi-output .media-preview-link {
+  width: calc(100% + 1px);
+  position: absolute;
+  height: 100%;
+  background: #000;
+  z-index: 2;
+  top: 0;
+  opacity: .8;
+  color: #fff;
+  display: none;
+}
+
+#usatsi-output .media-preview-link-input {
+  width: 50%;
+  height: 20px;
+  background: #000;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #FFF;
+  display: block;
+  margin: 0 auto;
+  clear: both;
+  margin-bottom: 5px;
+  outline: none;
+  padding: 5px;
+}
+
+#usatsi-output .media-preview-link button {
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#usatsi-output .media-preview-link button a {
+  color: #000;
+}
+
+#usatsi-output .media-preview-link button a:hover {
+  text-decoration: none;
+}
 ul.primary li.active a, ul.primary li.active a.active, ul.primary li.active a:active, ul.primary li.active a:visited {
   background-color: #000;
   border-color: #c9cac4;

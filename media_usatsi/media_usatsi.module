@@ -389,6 +389,8 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $credit = $value['credit'];
           $previewUrl = $value['previewUrl'];
           $historical = (!empty( $value['historical'] ) ? $value['historical'] : 0);
+          $parentId = $value['parentId'];
+          $uniqueId = $value['uniqueId'];
 
           $download_url = $full;
           $people_string = '';
@@ -414,6 +416,8 @@ function media_usatsi_search($search_term, $page_num = 1) {
             'credit' => $credit,
             'previewUrl' => $previewUrl,
             'historical' => $historical,
+            'parentid' => $parentId,
+            'uniqueId' => $uniqueId,
 
           );
         }

@@ -20,8 +20,8 @@
                 <div class="media-item">
                   <div class="media-thumbnail">
                     <div class="media-thumbnail-wrapper">
-                    <?php if ( $img['historical'] == '1') : ?>
-                        <img src="<?php print $img['thumb']; ?>" />
+                    <?php if ( !$img['historical'] ) : ?>
+                        <img class="usatsi media-locked" src="<?php print $img['thumb']; ?>" />
                     <?php else: ?>
                         <img class="usatsi"
                              data-image="<?php print $img['download']; ?>"
@@ -34,6 +34,14 @@
                         <li class="media-icon-preview" title="Image Preview"></li>
                         <li class="media-icon-import" title="Import File"></li>
                     </ul>
+                    <div class="media-preview-link">
+                        <p>Please see your account administrator to unlock this image for import.</p>
+                        <input value="http://www.usatsimg.com/setImages/<?php print $img['parentid'] ?>/preview/<?php print $img['uniqueId'] ?>" class="media-preview-link-input" />
+                        <button class="media-preview-link-copy">copy</button>
+                        <button class="media-preview-link-anchor">
+                            <a target="_blank" href="http://www.usatsimg.com/setImages/<?php print $img['parentid'] ?>/preview/<?php print $img['uniqueId'] ?>">goto</a>
+                        </button>
+                    </div>
                     </div>
                       <div class="label-wrapper">
                       <?php print truncate_utf8($img['title'], 30, true, true); ?>
