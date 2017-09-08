@@ -55,7 +55,7 @@
                   </div>
                 </div>
                 <div class="on-hover-content">
-                    <img src="<?php print $img['previewUrl']; ?>">
+                    <img class="media-preview-image" data-src="<?php print $img['previewUrl']; ?>" src="<?php print base_path() . path_to_theme()  . '/images/x.png' ?>">
                     <div class="label-wrapper label-title">
                       <?php print $img['title'] ?>
                     </div>

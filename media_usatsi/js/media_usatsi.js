@@ -25,12 +25,14 @@
       });
 
       $('.media-actions li.media-icon-import').once().bind('click', function() {
-        console.log('wtf');
           $(this).parent().parent().find('.usatsi').trigger('click');
       });
 
       $('.media-actions li.media-icon-preview').once().bind('click', function() {
-          $(this).parent().closest('.media-item-wrappper').find('.on-hover-content').fadeIn('fast');
+        var elm =  $(this).parent().closest('.media-item-wrappper');
+         elm.find('.on-hover-content').fadeIn('fast', function() {
+             $(this).find('.media-preview-image').attr('src', $(this).find('.media-preview-image').data('src'));
+         })
       });
 
       $('.on-hover-content').once().bind('mouseleave', function() {
