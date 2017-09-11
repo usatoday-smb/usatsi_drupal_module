@@ -10,7 +10,7 @@
  */
 ?>
 
-
+<?php if ( $images['totalImages'] > 0 ): ?>
 <div class="media-usatsi-pagination"></div>
 <ul class="media-list-thumbnails">
   <?php if (is_array($images)): ?>
@@ -20,7 +20,7 @@
                 <div class="media-item">
                   <div class="media-thumbnail">
                     <div class="media-thumbnail-wrapper">
-                    <?php if ( !$img['historical'] ) : ?>
+                    <?php if ( !$img['historical'] != -1 ) : ?>
                         <img class="usatsi media-locked" src="<?php print $img['thumb']; ?>" />
                     <?php else: ?>
                         <img class="usatsi"
@@ -74,3 +74,6 @@
   <?php endif; ?>
 </ul>
 <div class="media-usatsi-pagination-btm"></div>
+<?php else: ?>
+    <p>We're sorry.  There are no results for the search term provided.</p>
+<?php endif; ?>

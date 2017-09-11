@@ -177,8 +177,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#description' => t('Enter a URL to a file.'),
       '#maxlength' => 2083,
       '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
-    );
-
+      );
 
 
     $form['field_file_image_title_text_hidden'] = array(
@@ -388,12 +387,21 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $caption = $value['caption'];
           $credit = $value['credit'];
           $previewUrl = $value['previewUrl'];
-          $historical = (!empty( $value['historical'] ) ? $value['historical'] : 0);
+          $historical = 0;
           $parentId = $value['parentId'];
           $uniqueId = $value['uniqueId'];
 
           $download_url = $full;
           $people_string = '';
+
+          //Is the image historical!
+          $time_is = REQUEST_TIME;
+          $image_time_is = strtotime($date_created);
+          $timediff = floor((($time_is - $image_time_is) / (60 * 60 * 24 )) / 365 );
+
+          if ( $timediff >= 4 ) {
+            $historical = 1;
+          }
 
           foreach ($keywords as $row => $keyword) {
             foreach ($keyword as $item => $people) {
