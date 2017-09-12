@@ -147,6 +147,7 @@ function media_usatsi_form_file_entity_edit_alter(&$form, &$form_state) {
   }
 }
 
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -183,15 +184,16 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
     $form['field_file_image_title_text_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
-      '#default_value' => isset($form_state['storage']['field']) ? $form_state['storage']['field_file_image_title_text'] : NULL,
+      '#default_value' => isset($form_state['storage']['field_file_image_title_text']) ? $form_state['storage']['field_file_image_title_text'] : NULL,
     );
+
 
     $form['field_file_image_alt_text_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 2083,
       '#default_value' => isset($form_state['storage']['field_file_image_alt_text']) ? $form_state['storage']['field_file_image_alt_text'] : NULL,
     );
-
+    
     $form['field_file_image_attribution_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
@@ -216,7 +218,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#ajax' => array(
         'callback' => 'media_usatsi_external_ajax_callback',
         'wrapper' => 'usatsi-output',
-        'event' => 'click',
+        'event' => 'click',gg
       ),
     );
 
@@ -377,14 +379,17 @@ function media_usatsi_search($search_term, $page_num = 1) {
       foreach ($json_response['results']['item'] as $row => $response_data) {
         foreach ($response_data as $innerRow => $value) {
 
+          $caption_start_idx = ( strrpos( $value['caption'], ';' ) ? strrpos( $value['caption'], ';' ) + 1 : 0 );
+          $caption_end_idx = strlen($value['caption']) - 1;
+          $caption_credit_idx = ( strrpos( $value['caption'], 'Mandatory Credit:' ) != -1 ? strrpos( $value['caption'], 'Mandatory Credit:' ) : $caption_end_idx ) ;
+
           $thumb = $value['thumbUrl'];
           $title = $value['headline'];
           $id = $value['uniqueId'];
-          //$full = $value['previewUrl'];
           $full = $GLOBALS['base_url'] . '/media_usatsi/ajax/' . $id . '.jpg';
           $date_created = $value['dateCreate'];
           $keywords = $value['keywords'][0];
-          $caption = $value['caption'];
+          $caption = substr( $value['caption'], $caption_start_idx, $caption_end_idx - $caption_credit_idx );
           $credit = $value['credit'];
           $previewUrl = $value['previewUrl'];
           $historical = 0;
