@@ -200,6 +200,12 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#default_value' => isset($form_state['storage']['field_file_image_attribution']) ? $form_state['storage']['field_file_image_attribution'] : NULL,
     );
 
+    $form['field_file_image_thumbnail_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 2083,
+      '#default_value' => '',
+    );
+
     $form['field_usatsi_pagenum_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
@@ -229,7 +235,6 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#markup' => '',
     );
 
-
     $form['#validators'] = array();
 
     if (!empty($options['types'])) {
@@ -251,6 +256,9 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
 function media_usatsi_form_alter(&$form, $form_state, $form_id) {
 
   if ( isset( $_POST['field_file_image_alt_text_hidden'] ) ) {
+    $form['preview'] = array(
+      '#markup' => '<img src="' . $_POST['field_file_image_thumbnail_hidden'] . '" id="media-usatsi-preview" class="media-usatsi-thumbnail" /> ',
+    );
     $form['field_file_image_alt_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_alt_text_hidden'];
     $form['field_file_image_title_text'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_title_text_hidden'];
     $form['field_file_image_attribution'][LANGUAGE_NONE][0]['value']['#value'] = $_POST['field_file_image_attribution_hidden'];

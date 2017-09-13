@@ -341,3 +341,8 @@ form#media-usatsi-external input#edit-search {
 img.usatsi {
     cursor: pointer;
 }
+
+#media-usatsi-external .media-usatsi-thumbnail {
+    width: 100px;
+    height: auto;
+}

@@ -28,7 +28,8 @@
                              src="<?php print $img['thumb']; ?>"
                              data-headline="<?php print $img['title']; ?>"
                              data-caption="<?php print $img['caption']; ?>"
-                             data-credit="<?php print $img['credit']; ?>" />
+                             data-credit="<?php print $img['credit']; ?>"
+                             data-thumbnail="<?php print $img['thumb']; ?>" />
                     <?php endif ?>
                     <ul class="media-actions">
                         <li class="media-icon-preview" title="Image Preview"></li>

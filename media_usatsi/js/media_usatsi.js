@@ -10,8 +10,7 @@
         if ( rect.left < 0 ) {
             el.css('left', Math.abs(rect.left) );
         }
-        console.log( el.width() + rect.left );
-        console.log($('body').width());
+
         if ( (el.width() + rect.left) + 20 > $('body').width() ) {
             console.log('element off right side of the sceen');
             $(el).css('right', '20px');
@@ -69,7 +68,8 @@
             var usatsi_url = $(this).attr('data-image'),
                 usatsi_headline = $(this).attr('data-headline'),
                 usatsi_caption = $(this).attr('data-caption'),
-                usatsi_credit = $(this).attr('data-credit');
+                usatsi_credit = $(this).attr('data-credit'),
+                usatsi_thumbnail = $(this).attr('data-thumbnail');
 
             /* populate image form field values to be past to drupals
              * post page to prepopulate image metadata fields
@@ -78,6 +78,7 @@
             $('input[name="field_file_image_title_text_hidden"]').val(usatsi_headline);
             $('input[name="field_file_image_alt_text_hidden"]').val(usatsi_caption);
             $('input[name="field_file_image_attribution_hidden"]').val(usatsi_credit);
+            $('input[name="field_file_image_thumbnail_hidden"]').val(usatsi_thumbnail);
 
             // Autosubmit form.
             $('#media-usatsi-external').submit();
