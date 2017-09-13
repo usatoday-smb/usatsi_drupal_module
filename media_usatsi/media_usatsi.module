@@ -2,7 +2,11 @@
 
 /**
  * @file
- * Provides definition for USA Today Sports Images media integration.
+ * USA Today Sports Images media integration.
+ */
+
+/**
+ * Init function.
  */
 function media_usatsi_init() {
   drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/jquery.simplePagination.js');
@@ -34,12 +38,12 @@ function media_usatsi_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'file_entity.pages.inc',
     'file path' => drupal_get_path('module', 'file_entity'),
-     'menu_name' => 'usatsi-menu-tab',
-     'options' => array(
-         'attributes' => array(
-             'class' => array('media-usatsi')
-         )
-     ),
+    'menu_name' => 'usatsi-menu-tab',
+    'options' => array(
+      'attributes' => array(
+        'class' => array('media-usatsi'),
+      ),
+    ),
 
   );
 
@@ -51,10 +55,8 @@ function media_usatsi_menu() {
     'delivery callback' => 'media_usatsi_ajax',
   );
 
-
   return $items;
 }
-
 
 /**
  * Callback to return JSON encoded image for given id.
@@ -64,7 +66,7 @@ function media_usatsi_ajax($id) {
   $usatsi_api = variable_get('media_usatsi_api', "");
   $usatsi_api_secret = variable_get('media_usatsi_api_secret', "");
 
-  //Oauth Params
+  // Oauth Params.
   $baseUrl = "http://www.usatsimg.com/api/download/";
   $consumerSecret = $usatsi_api_secret;
   $consumerKey = $usatsi_api;
@@ -72,17 +74,17 @@ function media_usatsi_ajax($id) {
   $nonce = md5(mt_rand());
   $oauthSignatureMethod = "HMAC-SHA1";
   $oauthVersion = "1.0";
-  $imageid = explode('.',$id)[0];
+  $imageid = explode('.', $id)[0];
 
-  $sigBase = "GET&" . rawurlencode($baseUrl)."&"
+  $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
     . rawurlencode("imageID=" . rawurlencode($imageid)
       . "&oauth_consumer_key=" . rawurlencode($consumerKey)
       . "&oauth_nonce=" . rawurlencode($nonce)
       . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
-      . "&oauth_timestamp=" .rawurlencode($oauthTimestamp)
+      . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
       . "&oauth_version=" . rawurlencode($oauthVersion));
   $sigKey = $consumerSecret . "&";
-  $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, true));
+  $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, TRUE));
 
   $requestUrl = $baseUrl . "?oauth_consumer_key=" . rawurlencode($consumerKey)
     . "&oauth_nonce=" . rawurlencode($nonce)
@@ -128,14 +130,13 @@ function media_usatsi_forms($form_id, $args) {
   return $forms;
 }
 
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function media_usatsi_form_file_entity_edit_alter(&$form, &$form_state) {
-    // Make adjustments to the file edit form when used in a CTools modal.
+  // Make adjustments to the file edit form when used in a CTools modal.
   if (!empty($form_state['ajax'])) {
-      // Remove the preview and the delete button.
+    // Remove the preview and the delete button.
     $form['preview']['#access'] = FALSE;
     $form['actions']['delete']['#access'] = FALSE;
 
@@ -146,7 +147,6 @@ function media_usatsi_form_file_entity_edit_alter(&$form, &$form_state) {
 
   }
 }
-
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -161,7 +161,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
   if ($form_id == 'media_usatsi_external' && $step == 1) {
     unset($form['upload']);
 
-    // Add JS
+    // Add JS.
     drupal_add_js(drupal_get_path('module', 'media_usatsi') . '/js/media_usatsi.js');
     // Add CSS.
     drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
@@ -178,15 +178,13 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#description' => t('Enter a URL to a file.'),
       '#maxlength' => 2083,
       '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
-      );
-
+    );
 
     $form['field_file_image_title_text_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
       '#default_value' => isset($form_state['storage']['field_file_image_title_text']) ? $form_state['storage']['field_file_image_title_text'] : NULL,
     );
-
 
     $form['field_file_image_alt_text_hidden'] = array(
       '#type' => 'hidden',
@@ -255,7 +253,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
  */
 function media_usatsi_form_alter(&$form, $form_state, $form_id) {
 
-  if ( isset( $_POST['field_file_image_alt_text_hidden'] ) ) {
+  if (isset($_POST['field_file_image_alt_text_hidden'])) {
     $form['preview'] = array(
       '#markup' => '<img src="' . $_POST['field_file_image_thumbnail_hidden'] . '" id="media-usatsi-preview" class="media-usatsi-thumbnail" /> ',
     );
@@ -265,7 +263,6 @@ function media_usatsi_form_alter(&$form, $form_state, $form_id) {
   }
 
 }
-
 
 /**
  * AJAX callback function for media_usatsi_external().
@@ -278,7 +275,7 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
   $page_num = 1;
 
   if (!empty($form_state['values']['field_usatsi_pagenum_hidden'])) {
-      $page_num = $form_state['values']['field_usatsi_pagenum_hidden'];
+    $page_num = $form_state['values']['field_usatsi_pagenum_hidden'];
   }
 
   // Receive content.
@@ -300,11 +297,9 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
         'command' => 'media_usatsi_pagination',
         'pageNumber' => $page_num,
         'totalImages' => $content['totalImages'],
-        //'paginationUrl' => $GLOBALS['base_url'] . '/file/add/usatsi?pagenum='
       ),
     ),
   );
-
 
 }
 
@@ -312,6 +307,7 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
  * Main function for interaction with USA Today Sports Images API.
  *
  * @param string $search_term
+ *   String of terms and keywords to search on.
  * @param string $page_num
  *   String upon which we call usatsi api.
  *
@@ -328,18 +324,19 @@ function media_usatsi_search($search_term, $page_num = 1) {
     return t('Please insert API Key on module settings page');
   }
 
-    if (empty($usatsi_api_secret)) {
-        return t('Please insert API Secret on module settings page');
-    }
+  if (empty($usatsi_api_secret)) {
+    return t('Please insert API Secret on module settings page');
+  }
 
   $cid = 'media:usatsi:' . $search_term . ':' . $page_num;
 
-  //If a cached entry exists, return it.
+  // If a cached entry exists, return it.
   if ($cached = cache_get('sdfsdfsdfsdfsdf')) {
     $content = $cached->data;
-  } else {
+  }
+  else {
 
-    //Oauth Params
+    // Oauth Params.
     $baseUrl = "http://www.usatodaysportsimages.com/api/searchAPI/";
     $consumerSecret = $usatsi_api_secret;
     $consumerKey = $usatsi_api;
@@ -352,8 +349,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
 
     $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
       . rawurlencode("keywords=" . rawurlencode($keywords)
-        . "&limit=100"
-        . "&oauth_consumer_key=" . rawurlencode($consumerKey)
+        . "&limit=100&oauth_consumer_key=" . rawurlencode($consumerKey)
         . "&oauth_nonce=" . rawurlencode($nonce)
         . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
         . "&oauth_timestamp=" . $oauthTimestamp
@@ -362,7 +358,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
         . "&terms=" . rawurlencode($terms));
 
     $sigKey = $consumerSecret . "&";
-    $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, true));
+    $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, TRUE));
 
     $requestUrl = $baseUrl . "?oauth_consumer_key=" . rawurlencode($consumerKey)
       . "&oauth_nonce=" . rawurlencode($nonce)
@@ -372,12 +368,10 @@ function media_usatsi_search($search_term, $page_num = 1) {
       . "&oauth_signature=" . rawurlencode($oauthSig)
       . "&terms=" . rawurlencode($terms)
       . "&keywords=" . rawurlencode($keywords)
-      . "&limit=100"
-      . "&offset=" . $page_num;
+      . "&limit=100&offset=" . $page_num;
 
-
-    $response = drupal_http_request($requestUrl);//file_get_contents($requestUrl);
-
+    // file_get_contents($requestUrl);
+    $response = drupal_http_request($requestUrl);
 
     if ($response->code == 200) {
 
@@ -391,9 +385,9 @@ function media_usatsi_search($search_term, $page_num = 1) {
       foreach ($json_response['results']['item'] as $row => $response_data) {
         foreach ($response_data as $innerRow => $value) {
 
-          $caption_start_idx = ( strrpos( $value['caption'], ';' ) ? strrpos( $value['caption'], ';' ) + 1 : 0 );
+          $caption_start_idx = (strrpos($value['caption'], ';') ? strrpos($value['caption'], ';') + 1 : 0);
           $caption_end_idx = strlen($value['caption']) - 1;
-          $caption_credit_idx = ( strrpos( $value['caption'], 'Mandatory Credit:' ) != -1 ? strrpos( $value['caption'], 'Mandatory Credit:' ) : $caption_end_idx ) ;
+          $caption_credit_idx = (strrpos($value['caption'], 'Mandatory Credit:') != -1 ? strrpos($value['caption'], 'Mandatory Credit:') : $caption_end_idx);
 
           $thumb = $value['thumbUrl'];
           $title = $value['headline'];
@@ -401,7 +395,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $full = $GLOBALS['base_url'] . '/media_usatsi/ajax/' . $id . '.jpg';
           $date_created = $value['dateCreate'];
           $keywords = $value['keywords'][0];
-          $caption = substr( $value['caption'], $caption_start_idx, $caption_end_idx - $caption_credit_idx );
+          $caption = substr($value['caption'], $caption_start_idx, $caption_end_idx - $caption_credit_idx);
           $credit = $value['credit'];
           $previewUrl = $value['previewUrl'];
           $historical = 0;
@@ -411,12 +405,12 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $download_url = $full;
           $people_string = '';
 
-          //Is the image historical!
+          // Is the image historical!
           $time_is = REQUEST_TIME;
           $image_time_is = strtotime($date_created);
-          $timediff = floor((($time_is - $image_time_is) / (60 * 60 * 24 )) / 365 );
+          $timediff = floor((($time_is - $image_time_is) / (60 * 60 * 24)) / 365);
 
-          if ( $timediff >= 4 ) {
+          if ($timediff >= 4) {
             $historical = 1;
           }
 
@@ -453,10 +447,9 @@ function media_usatsi_search($search_term, $page_num = 1) {
     }
   }
 
-    return $content;
+  return $content;
 
 }
-
 
 /**
  * Allow stream wrappers to have their chance at validation.

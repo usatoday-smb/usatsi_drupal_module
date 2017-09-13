@@ -7,10 +7,7 @@
 
 /**
  * Media browser plugin for showing images from Usa Today Sports Images.
- *
  */
-
-
 class MediaUsatsi extends MediaBrowserPlugin {
 
   /**
