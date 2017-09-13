@@ -190,10 +190,10 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
 
     $form['field_file_image_alt_text_hidden'] = array(
       '#type' => 'hidden',
-      '#maxlength' => 2083,
+      '#maxlength' => 256,
       '#default_value' => isset($form_state['storage']['field_file_image_alt_text']) ? $form_state['storage']['field_file_image_alt_text'] : NULL,
     );
-    
+
     $form['field_file_image_attribution_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
@@ -218,7 +218,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#ajax' => array(
         'callback' => 'media_usatsi_external_ajax_callback',
         'wrapper' => 'usatsi-output',
-        'event' => 'click',gg
+        'event' => 'click',
       ),
     );
 

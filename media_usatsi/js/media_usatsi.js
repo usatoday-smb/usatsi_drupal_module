@@ -1,10 +1,27 @@
 (function ($) {
   'use strict';
 
+    var usatsi_media_preview_adjust = function(el) {
 
-  Drupal.behaviors.media_usatsi = {
+        var rect = el.offset();
+        var body_width = $('body').width();
+        var rect_width = el.width();
+
+        if ( rect.left < 0 ) {
+            el.css('left', Math.abs(rect.left) );
+        }
+        console.log( el.width() + rect.left );
+        console.log($('body').width());
+        if ( (el.width() + rect.left) + 20 > $('body').width() ) {
+            console.log('element off right side of the sceen');
+            $(el).css('right', '20px');
+        }
+
+    };
+
+
+    Drupal.behaviors.media_usatsi = {
     attach: function (context, settings) {
-
 
       //Add Class to Tab.
       $('.tabs.primary a[data-tabid="usatsi"]').attr('id', 'media-usatsi-tab');
@@ -32,7 +49,8 @@
         var elm =  $(this).parent().closest('.media-item-wrappper');
          elm.find('.on-hover-content').fadeIn('fast', function() {
              $(this).find('.media-preview-image').attr('src', $(this).find('.media-preview-image').data('src'));
-         })
+             usatsi_media_preview_adjust($(this));
+         });
       });
 
       $('.on-hover-content').once().bind('mouseleave', function() {

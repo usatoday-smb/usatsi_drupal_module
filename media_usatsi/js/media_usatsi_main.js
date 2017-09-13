@@ -1,5 +1,6 @@
 (function ($) {
     'use strict';
+
     Drupal.behaviors.media_usatsi = {
         attach: function (context, settings) {
             //Add Class to Tab.
