@@ -5,22 +5,28 @@ body.page-file-add-usatsi #page {
 }
 
 
+a[href="/file/add/usatsi"],
 #media-usatsi-tab {
     background: #a6a7a2 url(../images/si-logo-2x-black.png) no-repeat center;
     background-position-y: 2px;
     background-size: 65%;
-    overflow: hidden;
     text-indent: -1000px;
     width: 150px;
     cursor: pointer;
     border-color: #c9cac4;
+    font-size: 0;
+    color: transparent;
+    height: 30px;
 }
 
+a[href="/file/add/usatsi"]:hover,
+#overlay-tabs li a[href="/file/add/usatsi"]:hover,
 .ui-state-active #media-usatsi-tab,
 #media-usatsi-tab.active,
 #media-usatsi-tab:hover {
     background-image: url(../images/si-logo-2x.png);
-    background-color: #0c0c0c;
+    background-color: #000;
+    background-repeat: no-repeat;
 }
 
 #media-tab-usatsi {
@@ -346,3 +352,5 @@ img.usatsi {
     width: 100px;
     height: auto;
 }
+
+#usatsi-output p { color: #FFF; }
