@@ -331,7 +331,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
   $cid = 'media:usatsi:' . $search_term . ':' . ( $page_num ? $page_num : 1 );
 
   // If a cached entry exists, return it.
-  if ($cached = cache_get('asdadaawd')) {
+  if ($cached = cache_get($cid)) {
     $content = $cached->data;
   }
   else {
@@ -377,9 +377,6 @@ function media_usatsi_search($search_term, $page_num = 1) {
     if ($response->code == 200) {
 
       $json_response = drupal_json_decode($response->data);
-
-      // Set default message if no images.
-      $content = t('No pictures for current search');
 
       // Define result as array.
       $images = array();
