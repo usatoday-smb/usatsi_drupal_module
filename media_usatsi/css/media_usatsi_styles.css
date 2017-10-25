@@ -16,12 +16,10 @@ a[href="/file/add/usatsi"],
     border-color: #c9cac4;
     font-size: 0;
     color: transparent;
-    height: 32px;
+    height: 30px;
 }
 
 a[href="/file/add/usatsi"]:hover,
-a[href="/file/add/usatsi"]:active,
-#overlay-tabs li a[href="/file/add/usatsi"]:active,
 #overlay-tabs li a[href="/file/add/usatsi"]:hover,
 .ui-state-active #media-usatsi-tab,
 #media-usatsi-tab.active,
