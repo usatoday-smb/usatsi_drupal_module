@@ -77,12 +77,14 @@ function media_usatsi_ajax($id) {
   $imageid = explode('.', $id)[0];
 
   $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
-    . rawurlencode("imageID=" . rawurlencode($imageid)
-      . "&oauth_consumer_key=" . rawurlencode($consumerKey)
-      . "&oauth_nonce=" . rawurlencode($nonce)
-      . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
-      . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
-      . "&oauth_version=" . rawurlencode($oauthVersion));
+    . rawurlencode(
+        "imageID=" . rawurlencode($imageid)
+        . "&oauth_consumer_key=" . rawurlencode($consumerKey)
+        . "&oauth_nonce=" . rawurlencode($nonce)
+        . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+        . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
+        . "&oauth_version=" . rawurlencode($oauthVersion)
+    );
   $sigKey = $consumerSecret . "&";
   $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, TRUE));
 
@@ -281,9 +283,11 @@ function media_usatsi_external_ajax_callback($form, $form_state) {
   // Receive content.
   $content = media_usatsi_search($search_term, $page_num);
 
-  $output = theme('media_usatsi_list', array(
-    'images' => $content,
-  ));
+  $output = theme(
+        'media_usatsi_list', array(
+          'images' => $content,
+        )
+    );
 
   // Return ajax.
   return array(
@@ -328,7 +332,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
     return t('Please insert API Secret on module settings page');
   }
 
-  $cid = 'media:usatsi:' . $search_term . ':' . ( $page_num ? $page_num : 1 );
+  $cid = 'media:usatsi:' . $search_term . ':' . ($page_num ? $page_num : 1);
 
   // If a cached entry exists, return it.
   if ($cached = cache_get($cid)) {
@@ -348,29 +352,29 @@ function media_usatsi_search($search_term, $page_num = 1) {
     $terms = $search_term;
 
     $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
-      . rawurlencode("keywords=" . rawurlencode($keywords)
+        . rawurlencode(
+        "keywords=" . rawurlencode($keywords)
         . "&limit=100&oauth_consumer_key=" . rawurlencode($consumerKey)
         . "&oauth_nonce=" . rawurlencode($nonce)
         . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
         . "&oauth_timestamp=" . $oauthTimestamp
         . "&oauth_version=" . $oauthVersion
         . "&offset=" . $page_num
-        . "&terms=" . rawurlencode($terms));
+        . "&terms=" . rawurlencode($terms)
+    );
 
     $sigKey = $consumerSecret . "&";
     $oauthSig = base64_encode(hash_hmac("sha1", $sigBase, $sigKey, TRUE));
 
     $requestUrl = $baseUrl . "?oauth_consumer_key=" . rawurlencode($consumerKey)
-      . "&oauth_nonce=" . rawurlencode($nonce)
-      . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
-      . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
-      . "&oauth_version=" . rawurlencode($oauthVersion)
-      . "&oauth_signature=" . rawurlencode($oauthSig)
-      . "&terms=" . rawurlencode($terms)
-      . "&keywords=" . rawurlencode($keywords)
-      . "&limit=100&offset=" . $page_num;
-
-    // file_get_contents($requestUrl);
+          . "&oauth_nonce=" . rawurlencode($nonce)
+          . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
+          . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
+          . "&oauth_version=" . rawurlencode($oauthVersion)
+          . "&oauth_signature=" . rawurlencode($oauthSig)
+          . "&terms=" . rawurlencode($terms)
+          . "&keywords=" . rawurlencode($keywords)
+          . "&limit=100&offset=" . $page_num;
 
     $response = drupal_http_request($requestUrl);
 
