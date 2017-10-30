@@ -26,5 +26,16 @@ function media_usatsi_admin() {
     '#required' => TRUE,
   );
 
+  $form['media_usatsi_resolution_toggle'] = array(
+    '#type' => 'radios',
+    '#title' => t('Choose Hi or Lo resolution when importing images'),
+    '#options' => array(
+      t('hi'),
+      t( 'low'), ) ,
+    '#default_value' => variable_get('media_usatsi_resolution_toggle', "hi"),
+    '#description' => t('Resolution type when importing images into the Drupal CMS'),
+    '#required' => TRUE,
+  );
+
   return system_settings_form($form);
 }

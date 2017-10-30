@@ -42,6 +42,8 @@
 
       $('.media-actions li.media-icon-import').once().bind('click', function() {
           $(this).parent().parent().find('.usatsi').trigger('click');
+
+
       });
 
       $('.media-actions li.media-icon-preview').once().bind('click', function() {
@@ -63,6 +65,9 @@
       $('img.usatsi').bind('click', function (e) {
 
         if ( !$(this).hasClass('media-locked')  ) {
+
+            // Show downloading spinner!
+            $( this ).parent().parent().parent().parent().find( '.mexp-spinner' ).fadeIn( 'fast' );
 
             //Get Image Data from data attribute
             var usatsi_url = $(this).attr('data-image'),
