@@ -66,6 +66,9 @@ function media_usatsi_ajax($id) {
   $usatsi_api = variable_get('media_usatsi_api', "");
   $usatsi_api_secret = variable_get('media_usatsi_api_secret', "");
 
+  //Does user want low resolution images when importing.
+  $resolution_setting = variable_get('media_usatsi_resolution_toggle', "hi");
+
   // Oauth Params.
   $baseUrl = "http://www.usatsimg.com/api/download/";
   $consumerSecret = $usatsi_api_secret;
@@ -94,7 +97,12 @@ function media_usatsi_ajax($id) {
     . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
     . "&oauth_version=" . rawurlencode($oauthVersion)
     . "&oauth_signature=" . rawurlencode($oauthSig)
-    . "&imageID=" . rawurlencode($imageid);
+    . "&imageID=" . rawurlencode($imageid)
+    . "&lowres";
+
+  if ( $resolution_setting == 'low' ) {
+    $requestUrl = $requestUrl . "&lowres=1";
+  }
 
   $response = drupal_http_request($requestUrl);
   header("Content-Type: image/jpeg");
