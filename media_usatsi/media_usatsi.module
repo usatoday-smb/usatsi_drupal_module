@@ -31,7 +31,7 @@ function media_usatsi_menu() {
 
   $items['file/add/usatsi'] = array(
     'title' => 'USA Today',
-    'description' => 'Add images from USA Today to your media library.',
+    'description' => 'Add images from USA Today images to your media library.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_usatsi_external'),
     'access arguments' => array('access media browser'),
