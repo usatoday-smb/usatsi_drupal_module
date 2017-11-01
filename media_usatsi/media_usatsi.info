@@ -1,4 +1,4 @@
-name = Media: UsatSi
+name = Media: USA Today
 description = Adds USA Today Sports Images tab in media browser.
 package = Media
 core = 7.x

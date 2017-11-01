@@ -20,7 +20,7 @@ function media_usatsi_init() {
 function media_usatsi_menu() {
 
   $items['admin/config/media/usatsi'] = array(
-    'title' => 'USAT SI Media',
+    'title' => 'USA Today',
     'description' => 'Settings for media usatsi module',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_usatsi_admin'),
@@ -30,8 +30,8 @@ function media_usatsi_menu() {
   );
 
   $items['file/add/usatsi'] = array(
-    'title' => 'USAT SI',
-    'description' => 'Add images from USA Today Sports Images to your media library.',
+    'title' => 'USA Today',
+    'description' => 'Add images from USA Today images to your media library.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_usatsi_external'),
     'access arguments' => array('access media browser'),

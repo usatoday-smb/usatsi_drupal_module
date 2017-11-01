@@ -11,7 +11,7 @@
 function media_usatsi_media_browser_plugin_info() {
 
   $info['usatsi'] = array(
-    'title' => t('UsatSi'),
+    'title' => t('USA Today'),
     'class' => 'MediaUsatsi',
     'weight' => -9,
   );
