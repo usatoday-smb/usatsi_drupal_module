@@ -11,11 +11,6 @@
 ?>
 
 <?php if ( $images['totalImages'] > 0 ): ?>
-<div id="media-usatsi-branding">
-    <a href="https://usatsimg.com" target="_blank">
-        <img src="<?php print base_path() . path_to_theme()  . '/images/usatoday-logo.png' ?>" title="USA Today" />
-    </a>
-</div>
 <div class="media-usatsi-pagination"></div>
 <ul class="media-list-thumbnails">
   <?php if (is_array($images)): ?>
