@@ -13,7 +13,7 @@
 <?php if ( $images['totalImages'] > 0 ): ?>
 <div id="media-usatsi-branding">
     <a href="https://usatsimg.com" target="_blank">
-        <img src="<?php print base_path() . path_to_theme()  . '/images/si-logo-2x.png' ?>" title="USA Todaty Sports Images" />
+        <img src="<?php print base_path() . path_to_theme()  . '/images/usatoday-logo.png' ?>" title="USA Today" />
     </a>
 </div>
 <div class="media-usatsi-pagination"></div>
