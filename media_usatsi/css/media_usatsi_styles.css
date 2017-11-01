@@ -1,86 +1,3 @@
-body.page-file-add-usatsi,
-body.page-file-add-usatsi #page {
-    background: #000;
-    color: #FFF;
-}
-
-
-a[href="/file/add/usatsi"],
-#media-usatsi-tab {
-    background: #a6a7a2 url(../images/si-logo-2x-black.png) no-repeat center;
-    background-position-y: 2px;
-    background-size: 65%;
-    text-indent: -1000px;
-    width: 150px;
-    cursor: pointer;
-    border-color: #c9cac4;
-    font-size: 0;
-    color: transparent;
-    height: 30px;
-}
-
-a[href="/file/add/usatsi"]:hover,
-#overlay-tabs li a[href="/file/add/usatsi"]:hover,
-.ui-state-active #media-usatsi-tab,
-#media-usatsi-tab.active,
-#media-usatsi-tab:hover {
-    background-image: url(../images/si-logo-2x.png);
-    background-color: #000;
-    background-repeat: no-repeat;
-}
-
-#media-tab-usatsi {
-    background: #000;
-}
-
-
-form#media-usatsi-external input.form-text {
-    width: 98%;
-    height: 32px;
-    padding: 0 0 0 9px;
-    background: transparent;
-    border: 1px solid #666;
-    color: #FFF;
-    font-size: 120%;
-    display: block;
-    outline: none;
-    border-radius: 3px;
-}
-
-form#media-usatsi-external textarea.form-textarea,
-form#media-usatsi-external select.form-select {
-    background: #000;
-    color: #FFF;
-    border-radius: 3px;
-}
-
-form#media-usatsi-external select.form-select {
-    height: 26px;
-}
-
-form#media-usatsi-external .form-item-external-image, form#media-usatsi-external input#edit-search {
-    background: #000;
-    height: 36px;
-    box-sizing: border-box;
-
-}
-
-form#media-usatsi-external input#edit-search {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 14px;
-    padding: 10px 20px;
-    text-decoration: none;
-    text-transform: uppercase;
-    background: #666;
-    margin: 0;
-    border: 0;
-    cursor: pointer;
-}
-
-
 #media-usatsi-external ul.simple-pagination {
     list-style: none;
 }
@@ -182,57 +99,6 @@ form#media-usatsi-external input#edit-search {
 }
 
 /*------------------------------------*\
-	Light Theme Styles
-\*------------------------------------*/
-#media-usatsi-external .light-theme span {
-    cursor:pointer;
-}
-
-#media-usatsi-external .light-theme a, .light-theme span {
-    float: left;
-    color: #666;
-    font-size:14px;
-    line-height:24px;
-    font-weight: normal;
-    text-align: center;
-    border: 1px solid #BBB;
-    min-width: 14px;
-    padding: 0 7px;
-    margin: 0 5px 0 0;
-    border-radius: 3px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    background: #efefef; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #efefef 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#efefef)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%,#efefef 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffffff 0%,#efefef 100%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #ffffff 0%,#efefef 100%); /* IE10+ */
-    background: linear-gradient(top, #ffffff 0%,#efefef 100%); /* W3C */
-}
-
-#media-usatsi-external .light-theme a:hover, .light-theme li:not(.disabled):not(.active) span:hover {
-    text-decoration: none;
-    background: #FCFCFC;
-}
-
-#media-usatsi-external .light-theme .current {
-    background: #666;
-    color: #FFF;
-    border-color: #444;
-    box-shadow: 0 1px 0 rgba(255,255,255,1), 0 0 2px rgba(0, 0, 0, 0.3) inset;
-    cursor: default;
-}
-
-#media-usatsi-external .light-theme .ellipse {
-    background: none;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    font-weight: bold;
-    cursor: default;
-}
-
-/*------------------------------------*\
 	Dark Theme Styles
 \*------------------------------------*/
 #media-usatsi-external .dark-theme span {
@@ -300,12 +166,6 @@ form#media-usatsi-external input#edit-search {
 
 #media-usatsi-external .light-theme .current {
     box-shadow: none;
-}
-
-#media-usatsi-external .ajax-progress-throbber .throbber {
-    background: transparent url('../images/si-loader-75x75.gif') no-repeat;
-    background-size: 100%;
-
 }
 
 #media-usatsi-external .on-hover-content {
