@@ -354,3 +354,26 @@ img.usatsi {
 }
 
 #usatsi-output p { color: #FFF; }
+
+.mexp-svg-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -32px;
+    margin-top: -32px;
+}
+
+.mexp-spinner {
+    width: calc(100% - 1px);
+    position: absolute;
+    height: 100%;
+    background: #000;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    opacity: .8;
+    color: #fff;
+    display: none;
+    padding: 10px;
+    box-sizing: border-box;
+}
