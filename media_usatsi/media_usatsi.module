@@ -97,8 +97,7 @@ function media_usatsi_ajax($id) {
     . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
     . "&oauth_version=" . rawurlencode($oauthVersion)
     . "&oauth_signature=" . rawurlencode($oauthSig)
-    . "&imageID=" . rawurlencode($imageid)
-    . "&lowres";
+    . "&imageID=" . rawurlencode($imageid);
 
   if ( $resolution_setting == 'low' ) {
     $requestUrl = $requestUrl . "&lowres=1";
