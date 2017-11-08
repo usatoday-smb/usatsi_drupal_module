@@ -28,8 +28,11 @@
       //Add Class to Tab.
       $('.tabs.primary a[href="/file/add/usatsi"]').attr('id','media-usatsi-tab');
 
-      // Hide submit button.
-      $('form#media-usatsi-external .form-actions .form-submit').hide();
+      //Hide submit button on step 1
+      if ( $('#edit-external-image').length > 0 )  {
+         $('form#media-usatsi-external .form-actions .form-submit').hide();
+      }
+
 
       // show the media action buttons
       $('img.usatsi').once().bind('mouseenter', function() {

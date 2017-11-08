@@ -167,7 +167,7 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
 
   // Swap the upload field for an embed field when on the first step of the web
   // tab.
-  if ($form_id == 'media_usatsi_external' && $step == 1) {
+  if ($form_id === 'media_usatsi_external' ) {
     unset($form['upload']);
 
     // Add JS.
@@ -175,19 +175,25 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
     // Add CSS.
     drupal_add_css(drupal_get_path('module', 'media_usatsi') . '/css/media_usatsi.css');
 
-    $form['external_image'] = array(
-      '#type' => 'textfield',
-      '#reguired' => 1,
-      '#attributes' => array('placeholder' => t('Enter search term')),
-    );
 
-    $form['embed_code'] = array(
-      '#type' => 'hidden',
-      '#title' => t('File URL'),
-      '#description' => t('Enter a URL to a file.'),
-      '#maxlength' => 2083,
-      '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
-    );
+    if ( $step == 1 ) {
+      $form['external_image'] = array(
+        '#type' => 'textfield',
+        '#reguired' => 1,
+        '#attributes' => array('placeholder' => t('Enter search term')),
+      );
+
+      $form['embed_code'] = array(
+        '#type' => 'hidden',
+        '#title' => t('File URL'),
+        '#description' => t('Enter a URL to a file.'),
+        '#maxlength' => 2083,
+        '#default_value' => isset($form_state['storage']['embed_code']) ? $form_state['storage']['embed_code'] : NULL,
+      );
+
+    }
+
+
 
     $form['field_file_image_title_text_hidden'] = array(
       '#type' => 'hidden',
@@ -218,40 +224,46 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
       '#maxlength' => 256,
     );
 
-    $form['search'] = array(
-      '#type' => 'submit',
-      '#value' => t('Search'),
-      '#input' => TRUE,
-      '#name' => 'op',
-      '#button_type' => 'submit',
-      '#executes_submit_callback' => FALSE,
-      '#limit_validation_errors' => FALSE,
-      '#process' => array('ajax_process_form'),
-      '#theme_wrappers' => array('button'),
-      '#ajax' => array(
-        'callback' => 'media_usatsi_external_ajax_callback',
-        'wrapper' => 'usatsi-output',
-        'event' => 'click',
-      ),
-    );
 
-    // Blank output field which we will fill using AJAX.
-    $form['output'] = array(
-      '#prefix' => '<div id="usatsi-output">',
-      '#suffix' => '</div>',
-      '#markup' => '',
-    );
+    if ( $step == 1 ) {
+      $form['search'] = array(
+        '#type' => 'submit',
+        '#value' => t('Search'),
+        '#input' => TRUE,
+        '#name' => 'op',
+        '#button_type' => 'submit',
+        '#executes_submit_callback' => FALSE,
+        '#limit_validation_errors' => FALSE,
+        '#process' => array('ajax_process_form'),
+        '#theme_wrappers' => array('button'),
+        '#ajax' => array(
+          'callback' => 'media_usatsi_external_ajax_callback',
+          'wrapper' => 'usatsi-output',
+          'event' => 'click',
+        ),
+      );
 
-    $form['#validators'] = array();
+      // Blank output field which we will fill using AJAX.
+      $form['output'] = array(
+        '#prefix' => '<div id="usatsi-output">',
+        '#suffix' => '</div>',
+        '#markup' => '',
+      );
 
-    if (!empty($options['types'])) {
-      $form['#validators']['media_file_validate_types'] = array($options['types']);
+      $form['#validators'] = array();
+
+      if (!empty($options['types'])) {
+        $form['#validators']['media_file_validate_types'] = array($options['types']);
+      }
+
+      // Add validation and submission handlers to the form and ensure that they
+      // run first.
+      array_unshift($form['#validate'], 'media_usatsi_add_validate');
+      array_unshift($form['#submit'], 'media_internet_add_submit');
+
     }
 
-    // Add validation and submission handlers to the form and ensure that they
-    // run first.
-    array_unshift($form['#validate'], 'media_usatsi_add_validate');
-    array_unshift($form['#submit'], 'media_internet_add_submit');
+
 
   }
 
