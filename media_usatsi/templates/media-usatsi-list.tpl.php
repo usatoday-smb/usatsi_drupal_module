@@ -28,13 +28,14 @@
                     <?php if ( !$img['historical'] != -1 ) : ?>
                         <img class="usatsi media-locked" src="<?php print $img['thumb']; ?>" />
                     <?php else: ?>
-                        <img class="usatsi"
+                        <img class="usatsi <?php print ( $img['vendor_type'] ? 'sipa' : '' ) ?>"
                              data-image="<?php print $img['download']; ?>"
                              src="<?php print $img['thumb']; ?>"
                              data-headline="<?php print $img['title']; ?>"
                              data-caption="<?php print $img['caption']; ?>"
                              data-credit="<?php print $img['credit']; ?>"
-                             data-thumbnail="<?php print $img['thumb']; ?>" />
+                             data-thumbnail="<?php print $img['thumb']; ?>"
+                             data-image-vendor="<?php print ( $img['vendor_type'] == 'sipa' ? 'sipa' : 'usat' ); ?>"/>
                     <?php endif ?>
                     <ul class="media-actions">
                         <li class="media-icon-preview" title="Image Preview"></li>

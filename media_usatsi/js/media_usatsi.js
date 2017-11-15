@@ -77,7 +77,8 @@
                 usatsi_headline = $(this).attr('data-headline'),
                 usatsi_caption = $(this).attr('data-caption'),
                 usatsi_credit = $(this).attr('data-credit'),
-                usatsi_thumbnail = $(this).attr('data-thumbnail');
+                usatsi_thumbnail = $(this).attr('data-thumbnail'),
+                usatsi_vendor = $(this).attr('data-image-vendor');
 
             /* populate image form field values to be past to drupals
              * post page to prepopulate image metadata fields
@@ -87,6 +88,7 @@
             $('input[name="field_file_image_alt_text_hidden"]').val(usatsi_caption);
             $('input[name="field_file_image_attribution_hidden"]').val(usatsi_credit);
             $('input[name="field_file_image_thumbnail_hidden"]').val(usatsi_thumbnail);
+            $('input[name="field_file_image_vendor_hidden"]').val(usatsi_vendor);
 
             // Autosubmit form.
             $('#media-usatsi-external').submit();

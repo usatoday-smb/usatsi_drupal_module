@@ -208,6 +208,11 @@ img.usatsi {
     cursor: pointer;
 }
 
+img.usatsi.sipa {
+    height: 250px;
+    width: auto
+}
+
 #media-usatsi-external .media-usatsi-thumbnail {
     width: 100px;
     height: auto;
