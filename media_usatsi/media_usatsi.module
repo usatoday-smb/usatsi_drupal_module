@@ -76,9 +76,9 @@ function media_usatsi_ajax($id, $form, $form_state) {
 
   $image_vendor = 'sipa';//$form_state['storage']['field_file_image_vendor_hidden'];
   if ( $image_vendor == 'sipa') {
-    $baseUrl = "http://beta-stage.usatsimg.com/api/downloadSipa/";
+    $baseUrl = "http://www.usatsimg.com/api/downloadSipa/";
   } else {
-    $baseUrl = "http://beta-stage.usatsimg.com/api/download/";
+    $baseUrl = "http://www.usatsimg.com/api/download/";
   }
 
   // Oauth Params.
@@ -376,7 +376,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
   else {
 
     // Oauth Params.
-    $baseUrl = "http://beta-stage.usatsimg.com/api/searchAPI/";
+    $baseUrl = "http://www.usatsimg.com/api/searchAPI/";
     $consumerSecret = $usatsi_api_secret;
     $consumerKey = $usatsi_api;
     $oauthTimestamp = time();
