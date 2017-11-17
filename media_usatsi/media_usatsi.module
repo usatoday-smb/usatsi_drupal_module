@@ -47,7 +47,7 @@ function media_usatsi_menu() {
 
   );
 
-  $items['media_usatsi/ajax/%'] = array(
+  $items['media_usatsi/ajax/%/%/%'] = array(
     'page callback' => 'media_usatsi_ajax',
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
@@ -61,16 +61,28 @@ function media_usatsi_menu() {
 /**
  * Callback to return JSON encoded image for given id.
  */
-function media_usatsi_ajax($id) {
+function media_usatsi_ajax($id, $form, $form_state) {
   // USAT SI API key.
   $usatsi_api = variable_get('media_usatsi_api', "");
   $usatsi_api_secret = variable_get('media_usatsi_api_secret', "");
 
   //Does user want low resolution images when importing.
   $resolution_setting = variable_get('media_usatsi_resolution_toggle', "hi");
+  if ( $resolution_setting == 'low' ) {
+    $resParam = "&lowres=1";
+  } else {
+    $resParam = "&lowres=0";
+  }
+
+  $image_vendor = 'sipa';//$form_state['storage']['field_file_image_vendor_hidden'];
+  if ( $image_vendor == 'sipa') {
+    $baseUrl = "http://www.usatsimg.com/api/downloadSipa/";
+  } else {
+    $baseUrl = "http://www.usatsimg.com/api/download/";
+  }
 
   // Oauth Params.
-  $baseUrl = "http://www.usatsimg.com/api/download/";
+
   $consumerSecret = $usatsi_api_secret;
   $consumerKey = $usatsi_api;
   $oauthTimestamp = time();
@@ -82,6 +94,7 @@ function media_usatsi_ajax($id) {
   $sigBase = "GET&" . rawurlencode($baseUrl) . "&"
     . rawurlencode(
         "imageID=" . rawurlencode($imageid)
+        . $resParam
         . "&oauth_consumer_key=" . rawurlencode($consumerKey)
         . "&oauth_nonce=" . rawurlencode($nonce)
         . "&oauth_signature_method=" . rawurlencode($oauthSignatureMethod)
@@ -97,11 +110,8 @@ function media_usatsi_ajax($id) {
     . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
     . "&oauth_version=" . rawurlencode($oauthVersion)
     . "&oauth_signature=" . rawurlencode($oauthSig)
-    . "&imageID=" . rawurlencode($imageid);
-
-  if ( $resolution_setting == 'low' ) {
-    $requestUrl = $requestUrl . "&lowres=1";
-  }
+    . "&imageID=" . rawurlencode($imageid)
+    . $resParam;
 
   $response = drupal_http_request($requestUrl);
   header("Content-Type: image/jpeg");
@@ -222,6 +232,12 @@ function media_usatsi_form_file_entity_add_upload_alter(&$form, &$form_state, $f
     $form['field_usatsi_pagenum_hidden'] = array(
       '#type' => 'hidden',
       '#maxlength' => 256,
+    );
+
+    $form['field_file_image_vendor_hidden'] = array(
+      '#type' => 'hidden',
+      '#maxlength' => 256,
+      '#default_value' => isset($form_state['storage']['field_file_image_vendor_hidden']) ? $form_state['storage']['field_file_image_vendor_hidden'] : NULL,
     );
 
 
@@ -360,7 +376,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
   else {
 
     // Oauth Params.
-    $baseUrl = "http://www.usatodaysportsimages.com/api/searchAPI/";
+    $baseUrl = "http://www.usatsimg.com/api/searchAPI/";
     $consumerSecret = $usatsi_api_secret;
     $consumerKey = $usatsi_api;
     $oauthTimestamp = time();
@@ -379,7 +395,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
         . "&oauth_timestamp=" . $oauthTimestamp
         . "&oauth_version=" . $oauthVersion
         . "&offset=" . $page_num
-        . "&terms=" . rawurlencode($terms)
+        . "&sipa=1&terms=" . rawurlencode($terms)
     );
 
     $sigKey = $consumerSecret . "&";
@@ -391,7 +407,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
           . "&oauth_timestamp=" . rawurlencode($oauthTimestamp)
           . "&oauth_version=" . rawurlencode($oauthVersion)
           . "&oauth_signature=" . rawurlencode($oauthSig)
-          . "&terms=" . rawurlencode($terms)
+          . "&sipa=1&terms=" . rawurlencode($terms)
           . "&keywords=" . rawurlencode($keywords)
           . "&limit=100&offset=" . $page_num;
 
@@ -411,6 +427,8 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $caption_end_idx = strlen($value['caption']) - 1;
           $caption_credit_idx = (strrpos($value['caption'], 'Mandatory Credit:') != -1 ? strrpos($value['caption'], 'Mandatory Credit:') : $caption_end_idx);
 
+
+
           $thumb = $value['thumbUrl'];
           $title = $value['headline'];
           $id = $value['uniqueId'];
@@ -423,6 +441,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
           $historical = 0;
           $parentId = $value['parentId'];
           $uniqueId = $value['uniqueId'];
+          $vendor_type = ( $value['isSipa'] ? 'sipa' : 'usat' );
 
           $download_url = $full;
           $people_string = '';
@@ -459,6 +478,7 @@ function media_usatsi_search($search_term, $page_num = 1) {
             'historical' => $historical,
             'parentid' => $parentId,
             'uniqueId' => $uniqueId,
+            'vendor_type' => $vendor_type,
 
           );
         }
